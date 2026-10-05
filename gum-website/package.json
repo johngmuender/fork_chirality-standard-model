@@ -16,13 +16,14 @@
     "check:experience": "node --experimental-strip-types scripts/check-experience.ts",
     "check:ledger": "node --experimental-strip-types scripts/check-ledger.ts",
     "check:components": "vitest run",
-    "check": "npm run check:assets && npm run check:data && npm run check:physics && npm run check:experience && npm run check:ledger && npm run check:components",
+    "check": "npm run check:assets && npm run check:data && npm run check:physics && npm run check:experience && npm run check:ledger && npm run check:primer && npm run check:components",
     "typecheck": "tsc --noEmit",
     "dev": "vinext dev",
     "build": "vinext build",
     "start": "wrangler dev --config dist/server/wrangler.json",
     "lint": "oxlint",
-    "format": "oxfmt"
+    "format": "oxfmt",
+    "check:primer": "node --experimental-strip-types scripts/check-primer.ts"
   },
   "dependencies": {
     "d3": "7.9.0",

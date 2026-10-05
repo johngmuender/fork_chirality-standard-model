@@ -1,16 +1,16 @@
 'use client';
-import { useRef, useState } from 'react';
-import { Pause, Play } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { useMotion, useSceneClock } from '@/components/exhibit-motion';
+import {
+  ChapteredFilm,
+  filmLengthOf,
+  sceneAtTime,
+  type FilmScene,
+} from '@/components/chaptered-film';
 
 /**
- * A chaptered film rendered live in the browser: six scenes drawn as pure functions of
- * time, with chapter navigation, a scrubber, captions and a transcript. It needs no video
- * file, pauses when off-screen or when motion is paused, and steps frame by frame under
- * reduced motion.
+ * The argument as a six-chapter film drawn live in the browser. The scenes are pure
+ * functions of time; the shell, controls and transcript are the shared ChapteredFilm.
  */
-export const filmScenes = [
+export const filmScenes: readonly FilmScene[] = [
   {
     id: 'umdeutung',
     label: 'Umdeutung',
@@ -53,24 +53,12 @@ export const filmScenes = [
     caption:
       'Every claim carries a grade and a kill. Thirty stakes and twenty-six posed closures close the paper.',
   },
-] as const;
+];
 
-export const filmLength = filmScenes.reduce((sum, s) => sum + s.duration, 0);
+export const filmLength = filmLengthOf(filmScenes);
 
 export function sceneAt(time: number) {
-  const t = ((time % filmLength) + filmLength) % filmLength;
-  let start = 0;
-  for (let i = 0; i < filmScenes.length; i++) {
-    const end = start + filmScenes[i].duration;
-    if (t < end)
-      return {
-        index: i,
-        progress: (t - start) / filmScenes[i].duration,
-        start,
-      };
-    start = end;
-  }
-  return { index: filmScenes.length - 1, progress: 1, start };
+  return sceneAtTime(filmScenes, time);
 }
 
 const ease = (p: number) => Math.max(0, Math.min(1, p));
@@ -323,136 +311,19 @@ function Scene({ index, progress }: { index: number; progress: number }) {
   );
 }
 
-export function GumFilm() {
-  const stage = useRef<HTMLElement>(null);
-  const { enabled, reduced } = useMotion();
-  const [time, setTime] = useState(0);
-  const [playing, setPlaying] = useState(true);
-  const [captions, setCaptions] = useState(true);
-  const running = useSceneClock(
-    stage,
-    (_, dt) => setTime((t) => (t + dt) % filmLength),
-    playing,
-  );
-  const current = sceneAt(time);
-  const scene = filmScenes[current.index];
-  const jump = (index: number) => {
-    let start = 0;
-    for (let i = 0; i < index; i++) start += filmScenes[i].duration;
-    setTime(start + 0.001);
-  };
+export function GumFilm({ anchor = 'gum-film' }: { anchor?: string }) {
   return (
-    <section className="equation-film gum-film" id="gum-film">
-      <div className="film-heading">
-        <div>
-          <span className="eyebrow">THE ARGUMENT AS A SHORT FILM</span>
-          <h3>Watch the material keep the books.</h3>
-        </div>
-        <p>
-          Six chapters drawn live in your browser, {filmLength} seconds in all.
-          Pause, jump to a chapter, or read it as text.
-        </p>
-      </div>
-      <figure
-        className="film-stage"
-        ref={stage}
-        aria-label={
-          'Film chapter ' +
-          (current.index + 1) +
-          ': ' +
-          scene.label +
-          '. ' +
-          scene.caption
-        }
-      >
-        <svg viewBox="0 0 960 540" className="film-canvas" aria-hidden="true">
-          <rect width="960" height="540" fill="#080b10" />
-          <Scene index={current.index} progress={current.progress} />
-          <text x="40" y="48" className="film-kicker">
-            0{current.index + 1} / 0{filmScenes.length} ·{' '}
-            {scene.label.toUpperCase()}
-          </text>
-        </svg>
-        {captions && (
-          <figcaption className="film-caption">{scene.caption}</figcaption>
-        )}
-      </figure>
-      <div className="film-controls">
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => setPlaying((v) => !v)}
-          disabled={!enabled}
-          aria-pressed={playing && running}
-          aria-label={
-            reduced
-              ? 'Playback disabled by your reduced-motion preference; use the chapter buttons'
-              : playing
-                ? 'Pause the film'
-                : 'Play the film'
-          }
-        >
-          {playing && running ? <Pause size={13} /> : <Play size={13} />}
-          {reduced
-            ? 'Reduced motion'
-            : !enabled
-              ? 'Motion paused'
-              : playing
-                ? 'Pause'
-                : 'Play'}
-        </Button>
-        <input
-          type="range"
-          className="film-scrubber"
-          min={0}
-          max={filmLength}
-          step={0.1}
-          value={time}
-          onChange={(event) => setTime(Number(event.target.value))}
-          aria-label="Film position in seconds"
-          aria-valuetext={time.toFixed(0) + ' seconds, chapter ' + scene.label}
-        />
-        <span className="film-time">
-          {time.toFixed(0).padStart(2, '0')} / {filmLength} s
-        </span>
-        <label className="film-captions-toggle">
-          <input
-            type="checkbox"
-            checked={captions}
-            onChange={(e) => setCaptions(e.target.checked)}
-          />{' '}
-          Captions
-        </label>
-      </div>
-      <div className="film-chapters">
-        {filmScenes.map((s, i) => (
-          <Button
-            key={s.id}
-            variant="ghost"
-            aria-current={current.index === i ? 'step' : undefined}
-            className={current.index === i ? 'is-current' : ''}
-            onClick={() => jump(i)}
-          >
-            <span>0{i + 1}</span>
-            {s.label}
-          </Button>
-        ))}
-      </div>
-      <details className="inline-depth">
-        <summary>
-          Read the film as text <span>+</span>
-        </summary>
-        <div className="film-transcript">
-          {filmScenes.map((s, i) => (
-            <p key={s.id}>
-              <strong>
-                0{i + 1} · {s.label}.
-              </strong>{' '}
-              {s.caption}
-            </p>
-          ))}
-        </div>
-      </details>
-    </section>
+    <ChapteredFilm
+      id={anchor}
+      eyebrow="THE ARGUMENT AS A SHORT FILM"
+      title="Watch the material keep the books."
+      blurb={
+        'Six chapters drawn live in your browser, ' +
+        filmLength +
+        ' seconds in all. Pause, jump to a chapter, or read it as text.'
+      }
+      scenes={filmScenes}
+      render={(index, progress) => <Scene index={index} progress={progress} />}
+    />
   );
 }

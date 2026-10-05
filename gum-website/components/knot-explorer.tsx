@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { Button } from '@/components/ui/button';
@@ -39,6 +39,7 @@ function haloLengthInRadii(kappa: number) {
 
 /** The isorotating degree-one texture, rendered as an instanced field of arrows on concentric shells. */
 export default function KnotExplorer({ kappa }: Props) {
+  const uid = useId();
   const container = useRef<HTMLDivElement>(null);
   const api = useRef<Viewer | null>(null);
   const latest = useRef(kappa);
@@ -427,9 +428,9 @@ export default function KnotExplorer({ kappa }: Props) {
           Reset view
         </Button>
       </div>
-      <label className="root-isolate" htmlFor="halo-only">
+      <label className="root-isolate" htmlFor={uid + 'halo-only'}>
         <Switch
-          id="halo-only"
+          id={uid + 'halo-only'}
           checked={haloOnly}
           disabled={unavailable}
           onCheckedChange={setHaloOnly}
@@ -437,11 +438,11 @@ export default function KnotExplorer({ kappa }: Props) {
         Show only the halo
       </label>
       <div className="root-inspector">
-        <label htmlFor="shell-inspect">
+        <label htmlFor={uid + 'shell-inspect'}>
           Inspect a shell · keyboard or pointer
         </label>
         <NativeSelect
-          id="shell-inspect"
+          id={uid + 'shell-inspect'}
           value={shell}
           onChange={(event) => {
             const index = Number(event.target.value);
@@ -463,7 +464,7 @@ export default function KnotExplorer({ kappa }: Props) {
             </NativeSelectOption>
           ))}
         </NativeSelect>
-        <output htmlFor="shell-inspect" aria-live="off">
+        <output htmlFor={uid + 'shell-inspect'} aria-live="off">
           r = {readout.r.toFixed(2)} R* · {readout.region}
           <br />f = {readout.f.toFixed(3)} · σ_P = {readout.sigma.toFixed(3)} ·
           |π| = {readout.piMagnitude.toFixed(3)}

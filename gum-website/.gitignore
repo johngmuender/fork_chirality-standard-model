@@ -43,3 +43,4 @@ __pycache__/
 # Copies prepared from the canonical paper, notebook and media folders.
 /public/gum-paper.md
 /public/source-manifest.json
+/public/gum-primer.md

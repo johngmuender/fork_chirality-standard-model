@@ -896,3 +896,418 @@
     transition: none;
   }
 }
+
+/* The fifth reading path: the primer, nearly verbatim, with its own devices. */
+.reader-path-choices {
+  grid-template-columns: repeat(4, 1fr);
+}
+.reader-path-choices .primer-choice {
+  grid-column: 1 / -1;
+  background:
+    radial-gradient(ellipse at 15% 50%, var(--tone-1a304d) 0, transparent 55%),
+    var(--tone-101925);
+  border-color: var(--tone-3e5b7c);
+  flex-direction: row;
+  align-items: center;
+  gap: 24px;
+}
+.reader-path-choices .primer-choice strong {
+  min-width: 220px;
+  color: var(--tone-e7c795);
+}
+.reader-path-choices .primer-choice[data-pressed] {
+  background:
+    radial-gradient(ellipse at 15% 50%, var(--tone-254362) 0, transparent 55%),
+    var(--tone-193047) !important;
+}
+.secondary-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 18px 0 0;
+  font-size: 13px;
+  color: var(--tone-aac2df);
+}
+.secondary-link:hover {
+  color: var(--primary);
+}
+.path-foreign .foreign-toggle {
+  margin: 10px 0 20px;
+  font-size: 13px;
+  color: var(--tone-aac2df);
+  gap: 8px;
+}
+.primer-chapter .section-heading h2 {
+  font-size: clamp(30px, 3.4vw, 54px);
+}
+.primer-chapter-number {
+  display: block;
+  font:
+    12px var(--font-geist-mono),
+    monospace;
+  letter-spacing: 0.12em;
+  color: var(--tone-e7c795);
+  margin-bottom: 14px;
+}
+.primer-section {
+  max-width: 900px;
+  margin: 0 0 44px;
+}
+.primer-section-title {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  font-size: 26px;
+  margin: 46px 0 16px;
+  scroll-margin-top: 90px;
+}
+.primer-section-title > span {
+  font:
+    13px var(--font-geist-mono),
+    monospace;
+  color: var(--tone-8ea7c4);
+  letter-spacing: 0.08em;
+}
+.primer-front .primer-section-title {
+  font-size: 30px;
+}
+.primer-p {
+  font-size: 16px;
+  line-height: 1.85;
+  color: var(--tone-c8d4e0);
+  margin: 0 0 18px;
+}
+.primer-p strong,
+.primer-list strong,
+.primer-quote strong {
+  color: var(--tone-eef4fc);
+  font-weight: 550;
+}
+.primer-link {
+  color: var(--tone-a9cbf2);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--tone-3e5b7c);
+}
+.primer-link:hover {
+  color: var(--primary);
+}
+.primer-tag {
+  font-size: 0.85em;
+  margin: 0 1px;
+  cursor: help;
+}
+.primer-formula {
+  margin: 10px 0 26px;
+  padding: 22px 24px;
+  border: 1px solid var(--border);
+  background: radial-gradient(ellipse, var(--tone-14243b) 0, transparent 75%);
+  text-align: center;
+}
+.primer-formula > span {
+  display: block;
+  font:
+    italic clamp(17px, 2vw, 26px) Georgia,
+    serif;
+  letter-spacing: -0.02em;
+  line-height: 1.5;
+  color: var(--tone-e4edf8);
+  overflow-wrap: anywhere;
+}
+.primer-formula > small {
+  display: block;
+  margin-top: 10px;
+  font-size: 13px;
+  color: var(--tone-9cacc0);
+}
+.primer-quote {
+  margin: 10px 0 26px;
+  padding: 18px 26px;
+  border-left: 2px solid var(--primary);
+  background: var(--tone-111923);
+  font:
+    19px/1.65 Georgia,
+    serif;
+  color: var(--tone-d3e4f7);
+}
+.primer-list {
+  margin: 0 0 22px;
+  padding-left: 22px;
+}
+.primer-list li {
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--tone-c8d4e0);
+  margin: 0 0 10px;
+}
+.primer-table {
+  font-size: 14px;
+}
+.primer-tags {
+  display: grid;
+  gap: 10px;
+  margin: 10px 0 26px;
+  padding: 0;
+}
+.primer-tags > div {
+  display: grid;
+  grid-template-columns: 250px 1fr;
+  gap: 18px;
+  padding: 10px 0;
+  border-top: 1px solid var(--tone-202f40);
+}
+.primer-tags dt {
+  font:
+    13px var(--font-geist-mono),
+    monospace;
+  color: var(--tone-e7c795);
+  letter-spacing: 0.04em;
+  line-height: 1.6;
+}
+.primer-tags dd {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--tone-aab6c4);
+}
+.primer-box {
+  margin: 8px 0 28px;
+  padding: 20px 24px;
+  border: 1px solid var(--tone-2c445e);
+  border-left-width: 3px;
+  border-radius: 4px;
+  background: var(--tone-0f1824);
+}
+.primer-box .eyebrow {
+  font-size: 12px;
+}
+.primer-box h4 {
+  font:
+    19px Georgia,
+    serif;
+  margin: 10px 0 8px;
+  color: var(--tone-d3e4f7);
+}
+.primer-box p {
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--tone-b8c9dd);
+  margin: 8px 0 0;
+}
+.box-try {
+  border-left-color: var(--tone-9acbb9);
+}
+.box-try .eyebrow {
+  color: var(--tone-9acbb9);
+}
+.box-stepup {
+  border-left-color: var(--tone-8bbcff);
+}
+.box-changed {
+  border-left-color: var(--tone-f1a17d);
+  background: var(--tone-15283e);
+}
+.box-changed .eyebrow {
+  color: var(--tone-f1a17d);
+}
+.box-numbers {
+  border-left-color: var(--tone-e7c795);
+}
+.box-numbers .eyebrow {
+  color: var(--tone-e7c795);
+}
+.box-numbers p {
+  font:
+    14px/1.9 var(--font-geist-mono),
+    monospace;
+  color: var(--tone-c8d4e0);
+}
+.box-slip {
+  border-left-color: var(--tone-ecd199);
+  background: var(--tone-10221e60);
+}
+.box-slip .eyebrow {
+  color: var(--tone-ecd199);
+}
+.box-goals {
+  border-left-color: var(--primary);
+  margin: 0 0 36px;
+}
+.primer-chew {
+  margin: 0 0 30px;
+}
+.primer-problems {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 20px;
+}
+.primer-problems li {
+  display: grid;
+  grid-template-columns: 64px 1fr;
+  gap: 14px;
+  padding: 12px 0;
+  border-top: 1px solid var(--tone-202f40);
+  font-size: 14px;
+  line-height: 1.75;
+  color: var(--tone-b8c9dd);
+}
+.primer-problems li.is-starred {
+  color: var(--tone-c8d4e0);
+}
+.problem-number {
+  font:
+    13px var(--font-geist-mono),
+    monospace;
+  color: var(--tone-e7c795);
+  white-space: nowrap;
+}
+.primer-answer {
+  margin-top: 8px;
+}
+.primer-answer summary {
+  cursor: pointer;
+  font:
+    12px var(--font-geist-mono),
+    monospace;
+  color: var(--tone-9acbb9);
+  letter-spacing: 0.06em;
+}
+.primer-answer p {
+  margin: 8px 0 0;
+  font-size: 13px;
+  color: var(--tone-a6d3c0);
+}
+.primer-starred {
+  margin: 0 0 30px;
+}
+.primer-starred > summary {
+  color: var(--tone-e7c795);
+}
+.primer-glossary {
+  padding-bottom: 10px;
+}
+.primer-project {
+  margin: 40px 0 10px;
+}
+.primer-project-list {
+  padding-left: 26px;
+}
+.primer-project-list li {
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--tone-c8d4e0);
+  margin: 0 0 14px;
+}
+.primer-rubric {
+  font-size: 14px;
+  color: var(--tone-aab6c4);
+  border-top: 1px solid var(--tone-344c66);
+  padding-top: 16px;
+}
+.primer-closing {
+  font:
+    italic 16px Georgia,
+    serif;
+  color: var(--tone-8ea7c4);
+}
+
+/* The primer's exhibits share the instrument vocabulary; these are their extras. */
+.primer-exhibit {
+  margin: 10px 0 40px;
+  scroll-margin-top: 100px;
+}
+.primer-exhibit .lab-heading {
+  margin-bottom: 18px;
+}
+.primer-exhibit .lab-heading h3 {
+  font-size: clamp(24px, 2.4vw, 32px);
+}
+.primer-exhibit .cone-controls {
+  max-width: 900px;
+}
+.primer-dial {
+  min-width: 0;
+}
+.primer-dial .foundation-slider-label {
+  margin: 16px 0 10px;
+}
+.derrick-switches {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px 24px;
+  margin: 18px 0 6px;
+}
+.derrick-switches .chain-toggle {
+  margin: 0;
+  font-size: 13px;
+}
+.headline-questions {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.headline-questions li {
+  border-top: 1px solid var(--tone-2c445e);
+}
+.headline-question {
+  display: grid;
+  grid-template-columns: 40px 1fr 24px;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 14px 0;
+  background: none;
+  border: 0;
+  color: var(--tone-d3e4f7);
+  text-align: left;
+  cursor: pointer;
+  font-size: 16px;
+}
+.headline-question > span:last-child {
+  font-size: 20px;
+  color: var(--tone-8ea7c4);
+  text-align: right;
+}
+.headline-questions p {
+  margin: 0 0 16px 54px;
+  font-size: 14px;
+  line-height: 1.75;
+  color: var(--tone-aab6c4);
+}
+.primer-ladder {
+  margin: 20px auto 40px;
+  padding-top: 0;
+}
+@media (max-width: 1100px) {
+  .reader-path-choices {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 760px) {
+  .reader-path-choices .primer-choice {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .reader-path-choices .primer-choice strong {
+    min-width: 0;
+  }
+  .primer-tags > div {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+  .primer-problems li {
+    grid-template-columns: 54px 1fr;
+  }
+  .derrick-switches {
+    grid-template-columns: 1fr;
+  }
+  .primer-section-title {
+    font-size: 22px;
+  }
+}
+@media (max-width: 480px) {
+  .reader-path-choices {
+    grid-template-columns: 1fr;
+  }
+}

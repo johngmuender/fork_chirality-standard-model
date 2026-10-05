@@ -1,5 +1,5 @@
 'use client';
-import { useRef, useState } from 'react';
+import { useId, useRef, useState } from 'react';
 import { line, scaleLinear } from 'd3';
 import { Slider } from '@/components/ui/slider';
 import {
@@ -22,7 +22,14 @@ import {
   w0wa,
 } from '@/lib/gum-cosmos';
 
-export function RelaxationExhibit({ depth }: { depth: string }) {
+export function RelaxationExhibit({
+  depth,
+  anchor = 'relaxation',
+}: {
+  depth: string;
+  anchor?: string;
+}) {
+  const uid = useId();
   const [index, setIndex] = useState(50);
   const host = useRef<HTMLDivElement>(null);
   const demo = useGentleDemo(
@@ -51,7 +58,7 @@ export function RelaxationExhibit({ depth }: { depth: string }) {
   return (
     <div
       className="relaxation-exhibit"
-      id="relaxation"
+      id={anchor}
       ref={host}
       {...demo.handlers}
     >
@@ -155,7 +162,7 @@ export function RelaxationExhibit({ depth }: { depth: string }) {
             </text>
           </g>
         </svg>
-        <label id="index-label" className="foundation-slider-label">
+        <label id={uid + 'index-label'} className="foundation-slider-label">
           Relaxation index n <output aria-live="off">{n.toFixed(2)}</output>
         </label>
         <Slider
@@ -164,7 +171,7 @@ export function RelaxationExhibit({ depth }: { depth: string }) {
           step={1}
           value={[index]}
           onValueChange={(v) => setIndex(Array.isArray(v) ? v[0] : v)}
-          aria-labelledby="index-label"
+          aria-labelledby={uid + 'index-label'}
         />
         <div
           className="pitch-readouts"
@@ -256,7 +263,12 @@ export function RelaxationExhibit({ depth }: { depth: string }) {
   );
 }
 
-export function DriftExhibit() {
+export function DriftExhibit({
+  anchor = 'neutrino-drift',
+}: {
+  anchor?: string;
+} = {}) {
+  const uid = useId();
   const [index, setIndex] = useState(50);
   const [lag, setLag] = useState(-20);
   const n = index / 100;
@@ -270,7 +282,7 @@ export function DriftExhibit() {
     .y((z) => y(Math.max(0.4, ratio(z))));
   const breakdown = epsilon < 0 ? driftBreakdownRedshift(n, epsilon) : Infinity;
   return (
-    <div className="drift-exhibit" id="neutrino-drift">
+    <div className="drift-exhibit" id={anchor}>
       <div className="lab-heading">
         <span className="eyebrow">
           PROPOSITION 27 · NEUTRINOS THAT WERE LIGHTER IN THE PAST
@@ -322,7 +334,10 @@ export function DriftExhibit() {
         </svg>
         <div className="ladder-sliders">
           <div>
-            <label id="drift-n-label" className="foundation-slider-label">
+            <label
+              id={uid + 'drift-n-label'}
+              className="foundation-slider-label"
+            >
               Relaxation index n <output aria-live="off">{n.toFixed(2)}</output>
             </label>
             <Slider
@@ -331,11 +346,11 @@ export function DriftExhibit() {
               step={1}
               value={[index]}
               onValueChange={(v) => setIndex(Array.isArray(v) ? v[0] : v)}
-              aria-labelledby="drift-n-label"
+              aria-labelledby={uid + 'drift-n-label'}
             />
           </div>
           <div>
-            <label id="lag-label" className="foundation-slider-label">
+            <label id={uid + 'lag-label'} className="foundation-slider-label">
               Lag amplitude ε_ν{' '}
               <output aria-live="off">{epsilon.toFixed(2)}</output>
             </label>
@@ -345,7 +360,7 @@ export function DriftExhibit() {
               step={1}
               value={[lag]}
               onValueChange={(v) => setLag(Array.isArray(v) ? v[0] : v)}
-              aria-labelledby="lag-label"
+              aria-labelledby={uid + 'lag-label'}
             />
           </div>
         </div>

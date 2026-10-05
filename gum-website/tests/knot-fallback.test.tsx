@@ -98,7 +98,9 @@ it('keeps the shell readout when WebGL cannot initialise', async () => {
   fireEvent.change(selector, { target: { value: '6' } });
   expect(selector.value).toBe('6');
   const expected = shellReadout((6.5 / 8) * 2.6, 1, halo(kappa));
-  const readout = view.container.querySelector('output[for="shell-inspect"]');
+  const readout = view.container.querySelector(
+    '.root-inspector output[aria-live="off"]',
+  );
   expect(readout?.textContent).toContain('r = ' + expected.r.toFixed(2));
   expect(readout?.textContent).toContain(expected.region);
   expect(

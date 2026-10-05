@@ -1,88 +1,269 @@
+import { primerAnchors, primerChapterIds } from './primer.ts';
+
+export type Edition = 'paper' | 'primer';
+type ChapterEntry = {
+  title: string;
+  short: string;
+  summary: string;
+  edition: Edition;
+};
+
 export const chapterInfo = {
   question: {
     title: 'The inverse Umdeutung',
+    short: 'The inverse Umdeutung',
     summary:
       'Heisenberg expelled the trajectory in 1925. GUM asks what material could keep the books instead, and puts MacCullagh, Kelvin, the Cosserats, de Broglie and Bell on one timeline.',
+    edition: 'paper',
   },
   core: {
     title: 'From four levels to the killable core',
+    short: 'The killable core',
     summary:
       'Follow the ledger from the material’s four levels of description through its grades and audit to the discriminating claims that can be retired.',
+    edition: 'paper',
   },
   material: {
     title: 'The material in its continuum description',
+    short: 'The material',
     summary:
       'Displacement and grain orientation, an objectivity principle that acts as a gauge principle, and the exact linear spectrum with its cone condition.',
+    edition: 'paper',
   },
   light: {
     title: 'Light as the orientation sector',
+    short: 'Light',
     summary:
       'MacCullagh’s aether rescued as a micropolar medium, Maxwell’s equations from the locked doublet, and the locality dichotomy that moves c_L out of electromagnetism.',
+    edition: 'paper',
   },
   vacuum: {
     title: 'The structured vacuum',
+    short: 'The vacuum',
     summary:
       'A chiral condensate with a 22–25 μm pitch tied to the neutrino mass, and the far-infrared trough it would imprint on cosmological spectra.',
+    edition: 'paper',
   },
   quantum: {
     title: 'The quantum description',
+    short: 'The quantum',
     summary:
       'Nelson agitation, the Born rule, the tower of conditional fields, dimension counting, dense storage and the mirror-circuit cliff; finite-speed nonlocality and its timing tests.',
+    edition: 'paper',
   },
   particle: {
     title: 'The GUM particle',
+    short: 'The particle',
     summary:
       'An isorotating knot: mass as forbidden frequency, spin ½ from the (1,1) closure, the de Broglie clock as a physical rotation, and the channeling resonance it predicts.',
+    edition: 'paper',
   },
   electron: {
     title: 'The electron: core, halo, band edge',
+    short: 'The electron',
     summary:
       'A two-scale object with a core at the structural scale, a Compton-scale halo, and a band edge at √2·mc² with a positronium signature.',
+    edition: 'paper',
   },
   sectors: {
     title: 'The Standard-Model sectors',
+    short: 'The sectors',
     summary:
       'Three families as frustration classes, the electroweak skeleton with ρ = 1, confinement from a gapped stratum, anomaly sums as tiling and CP by holonomy.',
+    edition: 'paper',
   },
   cosmos: {
     title: 'Cosmology and the relaxation family',
+    short: 'Cosmology',
     summary:
       'Dark energy as the lag of a soft mode, the Dvali–Turner equivalence, w_a ≥ 0 on the wrong side of DESI, and neutrinos that were lighter in the past.',
+    edition: 'paper',
   },
   handedness: {
     title: 'The handedness bit',
+    short: 'The handedness bit',
     summary:
       'One sign links weak chirality, δ_CP, cosmic birefringence and a mirror test of short-range forces.',
+    edition: 'paper',
   },
   ledger: {
     title: 'Ledger, closures and stakes',
+    short: 'The ledger',
     summary:
       'Thirty stakes, twenty-six posed closures, the audit criterion, and the corrections the revision applies to itself.',
+    edition: 'paper',
   },
   verify: {
     title: 'Read it, check it, retire it',
+    short: 'Verify',
     summary:
       'The draft, its grades and the review prompt; run the printed arithmetic in your browser and keep the glossary within reach.',
+    edition: 'paper',
   },
-} as const;
+  'primer-intro': {
+    title: 'The primer: a letter and the rules',
+    short: 'Letter & rules',
+    summary:
+      'A letter before page one, the nine tags, the death list, the corrections list, the two reading tracks and the map from each chapter to the paper.',
+    edition: 'primer',
+  },
+  'primer-1': {
+    title: 'The oldest question, and a new way to ask it',
+    short: '1 · The question',
+    summary:
+      'Where the “made of” ladder stops, why the aether died twice, Heisenberg’s move and GUM’s inversion of it, the word “material”, and the wager in its exact shape.',
+    edition: 'primer',
+  },
+  'primer-2': {
+    title: 'Springs, waves and forbidden frequencies',
+    short: '2 · Forbidden frequencies',
+    summary:
+      'Sound in steel, necklaces and band gaps, mass as a forbidden frequency, a second light cone a hair wider, and the evanescent skin around every particle.',
+    edition: 'primer',
+  },
+  'primer-3': {
+    title: 'Grains with faces: the continuum description',
+    short: '3 · Grains with faces',
+    summary:
+      'Cosserat grains that can turn, objectivity as the rule with teeth, the four sectors of stored energy, the four voices, the import list and the audit K-N.',
+    edition: 'primer',
+  },
+  'primer-4': {
+    title: 'Light from twist',
+    short: '4 · Light from twist',
+    summary:
+      'MacCullagh’s ghost and its loophole, half of Maxwell for free, the other half from spinning grains with inertia, and what the masslessness theorem does not explain.',
+    edition: 'primer',
+  },
+  'primer-5': {
+    title: 'The second speed, and the theorem that retracted a prediction',
+    short: '5 · The second speed',
+    summary:
+      'Why a static field cannot be a rate, the two completions, the defect-current theorem, the locality dichotomy, and where the second speed went.',
+    edition: 'primer',
+  },
+  'primer-6': {
+    title: 'Charge is a cone; the vacuum is a helix; the sky has a trough',
+    short: '6 · Cone, helix, trough',
+    summary:
+      'A paper cone that is a charge, holonomy, the borrowed α, the helical instability in four lines, the pitch window, Bragg passage and the far-infrared trough.',
+    edition: 'primer',
+  },
+  'primer-7': {
+    title: 'The jittery material: quantum mechanics as bookkeeping',
+    short: '7 · The jittery material',
+    summary:
+      'Madelung’s fluid with one strange pressure, the crowd that won’t be squeezed, the Born rule as equilibrium, Bell’s beables, the tower, and Schmidt rank.',
+    edition: 'primer',
+  },
+  'primer-8': {
+    title:
+      'Counting knobs, mirror circuits, and spooky action at a finite speed',
+    short: '8 · Knobs and cliffs',
+    summary:
+      'Dimension counting and why it is untestable as stated, dense storage, the mirror-circuit cliff and its knob, finite-speed nonlocality, and the grain-size bound.',
+    edition: 'primer',
+  },
+  'primer-9': {
+    title: 'Particles are knots',
+    short: '9 · Particles are knots',
+    summary:
+      'Textures you cannot comb away, Derrick’s guillotine and its two escapes, the Bogomolny trick and the mass law, a ticking knot that does not radiate, and the belt trick.',
+    edition: 'primer',
+  },
+  'primer-10': {
+    title: 'The spinning knot, Planck’s constant, and a clock you can hit',
+    short: '10 · The spinning knot',
+    summary:
+      'Two closure conditions and one ħ, the quarter that is kinematics, spin ½ by algebra, Flag F-B1, the α–µ discriminant and the washboard test.',
+    edition: 'primer',
+  },
+  'primer-11': {
+    title: 'The two-scale electron and its band edge',
+    short: '11 · The two-scale electron',
+    summary:
+      'Three laboratory facts, why a Compton-sized knot fails, core and halo, the obligation K-10, and the positronium line a band edge could emit.',
+    edition: 'primer',
+  },
+  'primer-12': {
+    title: 'Why three families, and the lightest particle',
+    short: '12 · Three families',
+    summary:
+      'Frustration classes, the two-integral generator reported as a landing, why the ladder stops at three, the heliknoton neutrino, the bridge, the squeeze and the door.',
+    edition: 'primer',
+  },
+  'primer-13': {
+    title: 'The skeleton: weak, strong, and the tile',
+    short: '13 · The skeleton',
+    summary:
+      'A 2×2 diagonalisation that gives ρ = 1, Yukawa universality from multiplicative mass, the weak vertex, quarks in prison, anomalies as tiling, CP by holonomy.',
+    edition: 'primer',
+  },
+  'primer-14': {
+    title:
+      'Dark energy with a pulse; gravity from defects; one guess in the dark',
+    short: '14 · Dark energy',
+    summary:
+      'The worst prediction in physics and its defusal, the lag and the family, an equation already written, the pre-registration, drifting neutrinos, geometry from defects.',
+    edition: 'primer',
+  },
+  'primer-15': {
+    title: 'The one bit',
+    short: '15 · The one bit',
+    summary:
+      'A parity check on the vacuum, the rotation of the sky, the endpoint property, one domain across the universe, a mirror test of short-range forces.',
+    edition: 'primer',
+  },
+  'primer-16': {
+    title:
+      'How a theory bets its life, corrects itself, and makes you an auditor',
+    short: '16 · Adjudication',
+    summary:
+      'The audit criterion, landings and tests, the death list ranked, fifteen corrections and counting, the kit packed for travel, and a headline read with it.',
+    edition: 'primer',
+  },
+  'primer-end': {
+    title: 'Glossary, answer notes and the final project',
+    short: 'Glossary & project',
+    summary:
+      'The primer’s selected glossary, its spot-check answers, and the final project with its grading rubric.',
+    edition: 'primer',
+  },
+} as const satisfies Record<string, ChapterEntry>;
 export type ChapterId = keyof typeof chapterInfo;
-export type PathId = 'curious' | 'physics' | 'experiments' | 'review';
+export const chapterIds = Object.keys(chapterInfo) as ChapterId[];
+for (const id of primerChapterIds)
+  if (!Object.hasOwn(chapterInfo, id))
+    throw new Error('The primer chapter ' + id + ' has no chapter entry.');
+export function editionOf(chapter: ChapterId): Edition {
+  return chapterInfo[chapter].edition;
+}
+
+export type PathId =
+  | 'curious'
+  | 'physics'
+  | 'experiments'
+  | 'review'
+  | 'primer';
 export type ReaderPath = {
   id: PathId;
   label: string;
   depth: string;
+  edition: Edition;
   description: string;
   title: string;
   introduction: string;
   chapters: ChapterId[];
   stops: { id: ChapterId; label: string }[];
   bridges: Partial<Record<ChapterId, string>>;
+  depthLabels?: Record<string, string>;
 };
 export const readerPaths: ReaderPath[] = [
   {
     id: 'curious',
     label: 'I’m curious',
     depth: 'story',
+    edition: 'paper',
     description:
       'Begin with a reversal of history. Build the material without assuming the equations.',
     title: 'Begin with a question Heisenberg closed in 1925.',
@@ -133,6 +314,7 @@ export const readerPaths: ReaderPath[] = [
     id: 'physics',
     label: 'I know some physics',
     depth: 'explore',
+    edition: 'paper',
     description:
       'Start with the Cosserat action and its spectrum, then follow the material into light, matter and the Standard Model.',
     title: 'From a micropolar action to a killable Standard Model.',
@@ -183,6 +365,7 @@ export const readerPaths: ReaderPath[] = [
     id: 'experiments',
     label: 'Show me the experiments',
     depth: 'explore',
+    edition: 'paper',
     description:
       'Open the stakes first. Each exhibit is an instrument with a kill condition.',
     title: 'Thirty stakes, and the instruments that read them.',
@@ -233,6 +416,7 @@ export const readerPaths: ReaderPath[] = [
     id: 'review',
     label: 'I’m here to check it',
     depth: 'math',
+    edition: 'paper',
     description:
       'Open the sources, grades and corrections first. Then challenge each sector at its stated grade.',
     title: 'Start with the ledger. Then challenge each transition.',
@@ -282,17 +466,86 @@ export const readerPaths: ReaderPath[] = [
         'Check the pitch window and the transparency bound against the oscillation floor and H₀.',
     },
   },
+  {
+    id: 'primer',
+    label: 'Teach me from the primer',
+    depth: 'explore',
+    edition: 'primer',
+    description:
+      'The GUM Material Primer: sixteen chapters for honors high-school and first-year readers, with its tags, problems, corrections boxes and exhibits.',
+    title: 'What keeps the books? A first book on the GUM program.',
+    introduction:
+      'The primer teaches a theory that might be wrong, and means it. Sixteen chapters in eight parts, nearly verbatim, carry its tags, its TRY THIS experiments, its STEP-UP analogies, its WHAT CHANGED boxes and its problems, with an exhibit wherever a calculation can be turned by hand. The paper’s own instruments are one link away whenever the primer points at them.',
+    chapters: [
+      'primer-intro',
+      'primer-1',
+      'primer-2',
+      'primer-3',
+      'primer-4',
+      'primer-5',
+      'primer-6',
+      'primer-7',
+      'primer-8',
+      'primer-9',
+      'primer-10',
+      'primer-11',
+      'primer-12',
+      'primer-13',
+      'primer-14',
+      'primer-15',
+      'primer-16',
+      'primer-end',
+    ],
+    stops: [
+      { id: 'primer-1', label: 'The question' },
+      { id: 'primer-6', label: 'Light & charge' },
+      { id: 'primer-9', label: 'Matter itself' },
+      { id: 'primer-16', label: 'Adjudication' },
+    ],
+    bridges: {
+      'primer-1':
+        'Part I — The question. Where the “made of” ladder stops, why the aether died twice, and the inversion GUM proposes.',
+      'primer-2':
+        'Part II — The material, level one. Springs and necklaces first; then grains that can turn, and the one relation that makes light exactly lightlike.',
+      'primer-4':
+        'Part III — Light, charge and the second speed. Maxwell from twist, the theorem that withdrew a prediction, and a paper cone that is a charge.',
+      'primer-7':
+        'Part IV — The quantum. A fluid with one strange pressure, a tower of fields, a count of knobs, and a cliff.',
+      'primer-9':
+        'Part V — Matter itself. Knots that cannot be combed away, a spinning closure that fixes ħ, and an electron with two scales.',
+      'primer-12':
+        'Part VI — Three families and the skeleton. Frustration classes, the lightest particle, and the Standard Model’s skeleton at its grades.',
+      'primer-14':
+        'Part VII — The cosmos and the one bit. A lag that looks like dark energy, geometry from defects, and one sign for the whole vacuum.',
+      'primer-16':
+        'Part VIII — Adjudication. The audit criterion, landings and tests, the death list ranked, and the kit packed for travel.',
+      'primer-end':
+        'The back matter: a selected glossary, spot-check answers, and the final project.',
+    },
+    depthLabels: {
+      story: 'HIGH-SCHOOL TRACK · ★ SECTIONS AND PROBLEMS FOLDED',
+      explore: 'UNDERGRADUATE TRACK · ★ SECTIONS OPEN',
+      math: 'EVERYTHING OPEN · WITH ANSWER NOTES',
+    },
+  },
 ];
 export function resolvePath(id: string | null): ReaderPath {
   return readerPaths.find((p) => p.id === id) ?? readerPaths[0];
 }
+/** Chapters of the path’s own edition that it leaves out: the background folds. */
 export function omittedChapters(id: PathId): ChapterId[] {
-  const included = resolvePath(id).chapters;
-  return (Object.keys(chapterInfo) as ChapterId[]).filter(
-    (chapter) => !included.includes(chapter),
+  const path = resolvePath(id);
+  return chapterIds.filter(
+    (chapter) =>
+      editionOf(chapter) === path.edition && !path.chapters.includes(chapter),
   );
 }
-export const nestedChapters: Record<string, ChapterId> = {
+/** The other edition’s chapters, available to deep links from this path. */
+export function foreignChapters(id: PathId): ChapterId[] {
+  const path = resolvePath(id);
+  return chapterIds.filter((chapter) => editionOf(chapter) !== path.edition);
+}
+const paperAnchors: Record<string, ChapterId> = {
   plates: 'question',
   timeline: 'question',
   'audit-step-0': 'core',
@@ -329,6 +582,18 @@ export const nestedChapters: Record<string, ChapterId> = {
   'local-checks': 'verify',
   glossary: 'verify',
 };
+export const nestedChapters: Record<string, ChapterId> = { ...paperAnchors };
+for (const [anchor, chapter] of Object.entries(primerAnchors())) {
+  if (!Object.hasOwn(chapterInfo, chapter))
+    throw new Error(
+      'Primer anchor ' + anchor + ' points at an unknown chapter.',
+    );
+  if (Object.hasOwn(paperAnchors, anchor) || Object.hasOwn(chapterInfo, anchor))
+    throw new Error(
+      'Primer anchor ' + anchor + ' collides with the paper’s anchors.',
+    );
+  nestedChapters[anchor] = chapter as ChapterId;
+}
 export function chapterForAnchor(id: string): ChapterId | undefined {
   return Object.hasOwn(chapterInfo, id)
     ? (id as ChapterId)

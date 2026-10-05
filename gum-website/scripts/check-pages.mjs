@@ -56,6 +56,18 @@ for (const id of ['electron', 'sectors'])
     'Folded chapter mounted: ' + id,
   );
 assert.match(doc.body.textContent, /The background is still here/);
+assert.match(doc.body.textContent, /Teach me from the primer/);
+assert.equal(
+  doc.querySelectorAll('.primer-choice').length,
+  1,
+  'the fifth path',
+);
+for (const id of ['primer-intro', 'primer-1', 'primer-16'])
+  assert.equal(
+    doc.querySelectorAll('#' + id).length,
+    0,
+    'Primer chapter mounted on the curious route: ' + id,
+  );
 assert.equal(doc.querySelectorAll('.plate-card').length, 6);
 let references = 0;
 for (const element of doc.querySelectorAll('[src],[href],[poster]')) {
@@ -74,6 +86,7 @@ for (const element of doc.querySelectorAll('[src],[href],[poster]')) {
 const manifest = JSON.parse(
   readFileSync(resolve(output, 'source-manifest.json'), 'utf8'),
 );
+assert.equal(manifest.files.length, 2, 'the draft and the primer');
 for (const file of manifest.files) {
   const bytes = readFileSync(resolve(output, file.download));
   assert.equal(bytes.length, file.bytes);

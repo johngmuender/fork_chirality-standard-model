@@ -24,7 +24,7 @@ import {
   w0wa,
   wa,
 } from '../lib/gum-cosmos.ts';
-import { readerPaths } from '../lib/reader-paths.ts';
+import { chapterInfo, readerPaths } from '../lib/reader-paths.ts';
 
 const near = (a: number, b: number, tolerance: number, label: string) =>
   assert(
@@ -144,11 +144,14 @@ const sources = readdirSync('components')
   .map((f) => readFileSync('components/' + f, 'utf8'))
   .join('\n');
 const ids = new Set([...sources.matchAll(/\bid="([^"]+)"/g)].map((m) => m[1]));
-assert.equal(readerPaths.length, 4);
+assert.equal(readerPaths.length, 5);
 for (const path of readerPaths) {
   assert(['story', 'explore', 'math'].includes(path.depth));
   for (const stop of path.stops)
-    assert(ids.has(stop.id), 'Missing reader-path target: ' + stop.id);
+    assert(
+      ids.has(stop.id) || Object.hasOwn(chapterInfo, stop.id),
+      'Missing reader-path target: ' + stop.id,
+    );
 }
 
 // The dark presentation, before hydration and without a light override.
@@ -203,5 +206,5 @@ for (const file of readdirSync('app').filter(
     );
 }
 console.log(
-  'PASS: all 64 family subsets across six sums; rank-one neutral sector and ρ = 1; holonomy counting; the frustration ladder lands; the relaxation family keeps w ∈ [−1, 0] and w_a ≥ 0; four reader paths; theme tokens and body-text contrast.',
+  'PASS: all 64 family subsets across six sums; rank-one neutral sector and ρ = 1; holonomy counting; the frustration ladder lands; the relaxation family keeps w ∈ [−1, 0] and w_a ≥ 0; five reader paths; theme tokens and body-text contrast.',
 );

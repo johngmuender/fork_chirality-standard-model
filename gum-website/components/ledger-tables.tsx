@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import {
   NativeSelect,
   NativeSelectOption,
@@ -18,7 +18,12 @@ import {
   stakesByStatus,
 } from '@/lib/gum-ledger';
 
-export function StakesTable() {
+export function StakesTable({
+  anchor = 'stakes',
+}: {
+  anchor?: string;
+} = {}) {
+  const uid = useId();
   const [status, setStatus] = useState('all');
   const [chapter, setChapter] = useState('all');
   const statuses = [...stakesByStatus().keys()].sort();
@@ -28,7 +33,7 @@ export function StakesTable() {
       (chapter === 'all' || s.chapter === chapter),
   );
   return (
-    <div className="stakes-table" id="stakes">
+    <div className="stakes-table" id={anchor}>
       <div className="lab-heading">
         <span className="eyebrow">TABLE 4 · THIRTY STAKES</span>
         <h3>Pre-registered observations that would kill a claim.</h3>
@@ -39,10 +44,10 @@ export function StakesTable() {
         </p>
       </div>
       <div className="table-filters">
-        <label htmlFor="stake-status">
+        <label htmlFor={uid + 'stake-status'}>
           Status
           <NativeSelect
-            id="stake-status"
+            id={uid + 'stake-status'}
             value={status}
             onChange={(e) => setStatus(e.target.value)}
           >
@@ -54,10 +59,10 @@ export function StakesTable() {
             ))}
           </NativeSelect>
         </label>
-        <label htmlFor="stake-chapter">
+        <label htmlFor={uid + 'stake-chapter'}>
           Chapter
           <NativeSelect
-            id="stake-chapter"
+            id={uid + 'stake-chapter'}
             value={chapter}
             onChange={(e) => setChapter(e.target.value)}
           >
@@ -112,9 +117,13 @@ export function StakesTable() {
   );
 }
 
-export function ClosuresTable() {
+export function ClosuresTable({
+  anchor = 'closures',
+}: {
+  anchor?: string;
+} = {}) {
   return (
-    <div className="closures-table" id="closures">
+    <div className="closures-table" id={anchor}>
       <div className="lab-heading">
         <span className="eyebrow">TABLE 3 · TWENTY-SIX POSED CLOSURES</span>
         <h3>Computations with named deliverables and a kill.</h3>
@@ -159,9 +168,13 @@ export function ClosuresTable() {
   );
 }
 
-export function AuditTable() {
+export function AuditTable({
+  anchor = 'audit',
+}: {
+  anchor?: string;
+} = {}) {
   return (
-    <div className="audit-table" id="audit">
+    <div className="audit-table" id={anchor}>
       <div className="lab-heading">
         <span className="eyebrow">TABLE 2 · THE LEDGER UNDER DEFINITION 9</span>
         <h3>Non-circular? Discriminating?</h3>
@@ -218,9 +231,13 @@ export function AuditTable() {
   );
 }
 
-export function CorrectionsList() {
+export function CorrectionsList({
+  anchor = 'corrections',
+}: {
+  anchor?: string;
+} = {}) {
   return (
-    <div className="corrections" id="corrections">
+    <div className="corrections" id={anchor}>
       <div className="lab-heading">
         <span className="eyebrow">
           SECTION XI E · THE PAPER CORRECTS ITSELF

@@ -1,5 +1,5 @@
 'use client';
-import { useMemo, useRef, useState } from 'react';
+import { useId, useMemo, useRef, useState } from 'react';
 import { line, scaleLinear } from 'd3';
 import { Slider } from '@/components/ui/slider';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -38,7 +38,14 @@ const superscript = (n: number) =>
     .replace(/-/g, '⁻')
     .replace(/\d/g, (d) => '⁰¹²³⁴⁵⁶⁷⁸⁹'[Number(d)]);
 
-export function SpectrumExhibit({ depth }: { depth: string }) {
+export function SpectrumExhibit({
+  depth,
+  anchor = 'spectrum',
+}: {
+  depth: string;
+  anchor?: string;
+}) {
+  const uid = useId();
   const [mismatch, setMismatch] = useState(100);
   const host = useRef<HTMLDivElement>(null);
   const demo = useGentleDemo(
@@ -70,12 +77,7 @@ export function SpectrumExhibit({ depth }: { depth: string }) {
     .y((k) => y(c * k));
   const deviation = doubletDispersion(3, moduli);
   return (
-    <div
-      className="spectrum-exhibit"
-      id="spectrum"
-      ref={host}
-      {...demo.handlers}
-    >
+    <div className="spectrum-exhibit" id={anchor} ref={host} {...demo.handlers}>
       <div className="lab-heading">
         <span className="eyebrow">
           PROPOSITION 1 · THE EXACT LINEAR SPECTRUM
@@ -130,7 +132,10 @@ export function SpectrumExhibit({ depth }: { depth: string }) {
               B3: ω² = ω₀² + c_ψ²k²
             </text>
           </svg>
-          <label id="mismatch-label" className="foundation-slider-label">
+          <label
+            id={uid + 'mismatch-label'}
+            className="foundation-slider-label"
+          >
             Shear modulus μ/ρ₀ relative to γ_eff/2J{' '}
             <output aria-live="off">{mismatch}%</output>
           </label>
@@ -140,7 +145,7 @@ export function SpectrumExhibit({ depth }: { depth: string }) {
             step={1}
             value={[mismatch]}
             onValueChange={(v) => setMismatch(Array.isArray(v) ? v[0] : v)}
-            aria-labelledby="mismatch-label"
+            aria-labelledby={uid + 'mismatch-label'}
           />
           <p
             className="instrument-answer"
@@ -194,6 +199,7 @@ export function SpectrumExhibit({ depth }: { depth: string }) {
 }
 
 export function ConeDifference() {
+  const uid = useId();
   const [gap, setGap] = useState('weak');
   const [logRadius, setLogRadius] = useState(-27 + Math.log10(1.5));
   const energy = gap === 'weak' ? 80.4e9 : 1e6;
@@ -228,7 +234,7 @@ export function ConeDifference() {
             ħω₀ = 1 MeV (knot scale)
           </ToggleGroupItem>
         </ToggleGroup>
-        <label id="gyration-label" className="foundation-slider-label">
+        <label id={uid + 'gyration-label'} className="foundation-slider-label">
           Grain radius of gyration ℓ_g{' '}
           <output aria-live="off">{sci(radius)} m</output>
         </label>
@@ -238,7 +244,7 @@ export function ConeDifference() {
           step={0.05}
           value={[logRadius]}
           onValueChange={(v) => setLogRadius(Array.isArray(v) ? v[0] : v)}
-          aria-labelledby="gyration-label"
+          aria-labelledby={uid + 'gyration-label'}
         />
         <div className="mass-equation" aria-live="polite">
           <span>(c_ψ − c)/c = (ℓ_gω₀/c)²/8</span>

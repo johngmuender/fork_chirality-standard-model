@@ -1,5 +1,5 @@
 'use client';
-import { useRef, useState } from 'react';
+import { useId, useRef, useState } from 'react';
 import { line, scaleLinear } from 'd3';
 import { Slider } from '@/components/ui/slider';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
@@ -24,14 +24,19 @@ import { cmbDipoleSpeed, lightSpeed } from '@/lib/gum-constants';
 
 const micron = (m: number, digits = 2) => (m * 1e6).toFixed(digits) + ' μm';
 
-export function PitchExhibit() {
+export function PitchExhibit({
+  anchor = 'pitch',
+}: {
+  anchor?: string;
+} = {}) {
+  const uid = useId();
   const [mass, setMass] = useState(50.5);
   const m3 = mass / 1000;
   const pitch = pitchFromMass(m3);
   const [low, high] = pitchWindow();
   const sum = massSum(0.004);
   return (
-    <div className="pitch-exhibit" id="pitch">
+    <div className="pitch-exhibit" id={anchor}>
       <div className="lab-heading">
         <span className="eyebrow">
           PROPOSITION 6 · THE NEUTRINO IS THE PITCH QUANTUM
@@ -50,7 +55,10 @@ export function PitchExhibit() {
         </p>
       </div>
       <div className="foundation-instrument pitch-instrument">
-        <label id="pitch-mass-label" className="foundation-slider-label">
+        <label
+          id={uid + 'pitch-mass-label'}
+          className="foundation-slider-label"
+        >
           Heaviest neutrino mass m₃{' '}
           <output aria-live="off">{m3.toFixed(4)} eV</output>
         </label>
@@ -60,7 +68,7 @@ export function PitchExhibit() {
           step={0.1}
           value={[mass]}
           onValueChange={(v) => setMass(Array.isArray(v) ? v[0] : v)}
-          aria-labelledby="pitch-mass-label"
+          aria-labelledby={uid + 'pitch-mass-label'}
         />
         <div className="pitch-readouts" aria-live="polite">
           <span>
@@ -96,7 +104,14 @@ export function PitchExhibit() {
   );
 }
 
-export function TroughExhibit({ depth }: { depth: string }) {
+export function TroughExhibit({
+  depth,
+  anchor = 'trough',
+}: {
+  depth: string;
+  anchor?: string;
+}) {
+  const uid = useId();
   const [redshift, setRedshift] = useState(0.12);
   const [logDn, setLogDn] = useState(Math.log10(6.2e-17));
   const [direction, setDirection] = useState('dipole');
@@ -127,7 +142,7 @@ export function TroughExhibit({ depth }: { depth: string }) {
   );
   const bound = transparencyBound(pitch);
   return (
-    <div className="trough-exhibit" id="trough" ref={host} {...demo.handlers}>
+    <div className="trough-exhibit" id={anchor} ref={host} {...demo.handlers}>
       <div className="lab-heading">
         <span className="eyebrow">THEOREM 7 · COSMOLOGICAL BRAGG PASSAGE</span>
         <h3>
@@ -189,7 +204,10 @@ export function TroughExhibit({ depth }: { depth: string }) {
               intensity (blue) · 1 − circular polarisation (copper)
             </text>
           </svg>
-          <label id="source-z-label" className="foundation-slider-label">
+          <label
+            id={uid + 'source-z-label'}
+            className="foundation-slider-label"
+          >
             Source redshift z_s{' '}
             <output aria-live="off">{redshift.toFixed(2)}</output>
           </label>
@@ -199,9 +217,9 @@ export function TroughExhibit({ depth }: { depth: string }) {
             step={0.01}
             value={[redshift]}
             onValueChange={(v) => setRedshift(Array.isArray(v) ? v[0] : v)}
-            aria-labelledby="source-z-label"
+            aria-labelledby={uid + 'source-z-label'}
           />
-          <label id="dn-label" className="foundation-slider-label">
+          <label id={uid + 'dn-label'} className="foundation-slider-label">
             Birefringence Δn/n̄{' '}
             <output aria-live="off">{dn.toExponential(1)}</output>
           </label>
@@ -211,7 +229,7 @@ export function TroughExhibit({ depth }: { depth: string }) {
             step={0.05}
             value={[logDn]}
             onValueChange={(v) => setLogDn(Array.isArray(v) ? v[0] : v)}
-            aria-labelledby="dn-label"
+            aria-labelledby={uid + 'dn-label'}
           />
           <ToggleGroup
             className="lab-tabs"

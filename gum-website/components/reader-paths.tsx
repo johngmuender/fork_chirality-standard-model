@@ -15,6 +15,7 @@ import {
   chapterInfo,
   chapterForAnchor,
   decodeAnchor,
+  foreignChapters,
   omittedChapters,
   readerPaths,
   resolvePath,
@@ -32,6 +33,13 @@ export function ReaderPaths({
   onChoose: (id: PathId) => void;
 }) {
   const path = resolvePath(selected);
+  const depthLabel =
+    path.depthLabels?.[depth] ??
+    (depth === 'story'
+      ? 'EQUATIONS FOLDED AWAY'
+      : depth === 'math'
+        ? 'MATHEMATICAL DETAILS OPEN'
+        : 'INTERACTIVE EXPLANATIONS OPEN');
   return (
     <section
       className="reader-paths"
@@ -42,11 +50,12 @@ export function ReaderPaths({
       <div className="reader-path-intro">
         <div>
           <span className="eyebrow">FIND YOUR WAY IN</span>
-          <h2 id="reader-path-heading">One argument. Your starting point.</h2>
+          <h2 id="reader-path-heading">One material. Your starting point.</h2>
         </div>
         <p>
-          Choose what to open first. The page rearranges around the questions
-          you bring.
+          Choose what to open first. Four routes rearrange the paper’s edition
+          around the questions you bring; the fifth teaches the primer from the
+          ground up.
         </p>
       </div>
       <ToggleGroup
@@ -59,7 +68,11 @@ export function ReaderPaths({
         aria-label="Choose a reader path"
       >
         {readerPaths.map((p) => (
-          <ToggleGroupItem value={p.id} key={p.id}>
+          <ToggleGroupItem
+            value={p.id}
+            key={p.id}
+            className={p.edition === 'primer' ? 'primer-choice' : ''}
+          >
             <strong>{p.label}</strong>
             <span>{p.description}</span>
           </ToggleGroupItem>
@@ -67,12 +80,7 @@ export function ReaderPaths({
       </ToggleGroup>
       <div className="path-opening" key={selected}>
         <span className="eyebrow">
-          {path.chapters.length} CHAPTERS ·{' '}
-          {depth === 'story'
-            ? 'EQUATIONS FOLDED AWAY'
-            : depth === 'math'
-              ? 'MATHEMATICAL DETAILS OPEN'
-              : 'INTERACTIVE EXPLANATIONS OPEN'}
+          {path.chapters.length} CHAPTERS · {depthLabel}
         </span>
         <h3>{path.title}</h3>
         <p>{path.introduction}</p>
@@ -106,6 +114,37 @@ export function PathChapter({
   return <>{children}</>;
 }
 
+function OptionalChapter({
+  chapter,
+  expanded,
+  onToggle,
+  children,
+}: {
+  chapter: ChapterId;
+  expanded: boolean;
+  onToggle: () => void;
+  children: ReactNode;
+}) {
+  return (
+    <div className="optional-chapter">
+      <Button
+        variant="ghost"
+        className="optional-heading"
+        aria-expanded={expanded}
+        aria-controls={'optional-' + chapter}
+        onClick={onToggle}
+      >
+        <span>
+          <strong>{chapterInfo[chapter].title}</strong>
+          <small>{chapterInfo[chapter].summary}</small>
+        </span>
+        {expanded ? <Minus size={20} /> : <Plus size={20} />}
+      </Button>
+      <div id={'optional-' + chapter}>{expanded ? children : null}</div>
+    </div>
+  );
+}
+
 export function PathFlow({
   selected,
   children,
@@ -116,6 +155,7 @@ export function PathFlow({
   const path = resolvePath(selected);
   const { enabled } = useMotion();
   const [expanded, setExpanded] = useState<ChapterId[]>([]);
+  const [listForeign, setListForeign] = useState(false);
   const [destination, setDestination] = useState('');
   const host = useRef<HTMLDivElement>(null);
   const chapters = new Map(
@@ -127,6 +167,13 @@ export function PathFlow({
       }),
   );
   const omitted = omittedChapters(selected);
+  const foreign = foreignChapters(selected);
+  const toggle = (chapter: ChapterId) =>
+    setExpanded((old) =>
+      old.includes(chapter)
+        ? old.filter((c) => c !== chapter)
+        : [...old, chapter],
+    );
   useEffect(() => {
     const follow = (id: string) => {
       const chapter = chapterForAnchor(id);
@@ -187,6 +234,7 @@ export function PathFlow({
     });
     return () => cancelAnimationFrame(frame);
   }, [destination, expanded, enabled]);
+  const foreignOpen = foreign.filter((chapter) => expanded.includes(chapter));
   return (
     <div className="path-flow" data-reader-path={selected} ref={host}>
       {path.chapters.map((chapter, index) => (
@@ -209,7 +257,7 @@ export function PathFlow({
               </a>
             ) : (
               <a href="#reader-paths">
-                <span>GO FURTHER</span>Choose another route through the argument{' '}
+                <span>GO FURTHER</span>Choose another route through the material{' '}
                 <ArrowRight size={16} />
               </a>
             )}
@@ -225,35 +273,60 @@ export function PathFlow({
             without changing paths.
           </p>
           {omitted.map((chapter) => (
-            <div className="optional-chapter" key={chapter}>
-              <Button
-                variant="ghost"
-                className="optional-heading"
-                aria-expanded={expanded.includes(chapter)}
-                aria-controls={'optional-' + chapter}
-                onClick={() =>
-                  setExpanded((old) =>
-                    old.includes(chapter)
-                      ? old.filter((c) => c !== chapter)
-                      : [...old, chapter],
-                  )
-                }
-              >
-                <span>
-                  <strong>{chapterInfo[chapter].title}</strong>
-                  <small>{chapterInfo[chapter].summary}</small>
-                </span>
-                {expanded.includes(chapter) ? (
-                  <Minus size={20} />
-                ) : (
-                  <Plus size={20} />
-                )}
-              </Button>
-              <div id={'optional-' + chapter}>
-                {expanded.includes(chapter) ? chapters.get(chapter) : null}
-              </div>
-            </div>
+            <OptionalChapter
+              key={chapter}
+              chapter={chapter}
+              expanded={expanded.includes(chapter)}
+              onToggle={() => toggle(chapter)}
+            >
+              {chapters.get(chapter)}
+            </OptionalChapter>
           ))}
+        </section>
+      )}
+      {foreign.length > 0 && (
+        <section
+          className="path-further path-foreign"
+          aria-labelledby="foreign-heading"
+        >
+          <span className="eyebrow">
+            {path.edition === 'primer'
+              ? 'THE PAPER’S EDITION'
+              : 'THE PRIMER’S EDITION'}
+          </span>
+          <h2 id="foreign-heading">
+            {path.edition === 'primer'
+              ? 'The paper’s instruments are one link away.'
+              : 'The primer teaches the same material from the ground up.'}
+          </h2>
+          <p>
+            {path.edition === 'primer'
+              ? 'Wherever the primer points at a theorem, a table or a stake, the paper’s chapter opens here without leaving this path.'
+              : 'Sixteen chapters for honors high-school and first-year readers, with tags, problems and corrections boxes. Open one here, or choose the primer route above.'}
+          </p>
+          <Button
+            variant="ghost"
+            className="foreign-toggle"
+            aria-expanded={listForeign}
+            onClick={() => setListForeign((v) => !v)}
+          >
+            {listForeign
+              ? 'Hide the list'
+              : `List the ${foreign.length} chapters`}
+            {listForeign ? <Minus size={16} /> : <Plus size={16} />}
+          </Button>
+          {foreign
+            .filter((chapter) => listForeign || foreignOpen.includes(chapter))
+            .map((chapter) => (
+              <OptionalChapter
+                key={chapter}
+                chapter={chapter}
+                expanded={expanded.includes(chapter)}
+                onToggle={() => toggle(chapter)}
+              >
+                {chapters.get(chapter)}
+              </OptionalChapter>
+            ))}
         </section>
       )}
     </div>

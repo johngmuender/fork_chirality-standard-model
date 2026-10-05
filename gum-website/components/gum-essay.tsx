@@ -24,6 +24,7 @@ import { Button } from '@/components/ui/button';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { ReaderPaths, PathFlow, PathChapter } from '@/components/reader-paths';
 import {
+  editionOf,
   resolvePath,
   chapterInfo,
   type ChapterId,
@@ -47,7 +48,11 @@ import {
 import { runLocalChecks } from '@/lib/gum-checks';
 import { levels } from '@/lib/gum-ledger';
 import { Glossary, Term } from '@/components/glossary';
-import { HistoricalPlates, PlateFigure } from '@/components/historical-plates';
+import {
+  HistoricalPlates,
+  PlateFigure,
+  paperPlates,
+} from '@/components/historical-plates';
 import { ScrollAudit } from '@/components/scroll-audit';
 import { MaterialLab } from '@/components/material-lab';
 import { LightSector } from '@/components/light-sector';
@@ -63,6 +68,12 @@ import { SectorsChapter } from '@/components/sector-exhibits';
 import { CosmosChapter } from '@/components/cosmos-exhibits';
 import { HandednessChapter } from '@/components/handedness-exhibits';
 import { LedgerChapter } from '@/components/ledger-tables';
+import {
+  PrimerChapterSection,
+  PrimerEnd,
+  PrimerIntro,
+} from '@/components/primer-chapter';
+import { primerChapters } from '@/lib/primer';
 
 const paper = asset('gum-paper.md');
 
@@ -431,6 +442,20 @@ function EssayContent({ initialPath }: { initialPath: PathId }) {
             <a className="primary-link" href="#reader-paths">
               Find your way into the material <ArrowDown size={18} />
             </a>
+            <a
+              className="secondary-link"
+              href="#reader-paths"
+              onClick={(event) => {
+                event.preventDefault();
+                choosePath('primer');
+                document
+                  .getElementById('reader-paths')
+                  ?.scrollIntoView({ behavior: 'instant', block: 'start' });
+              }}
+            >
+              Or let the primer teach you first, sixteen chapters from the
+              ground up <ArrowUpRight size={15} />
+            </a>
           </div>
           <div className="hero-art" ref={heroRef}>
             <div className="hero-halo" />
@@ -490,7 +515,9 @@ function EssayContent({ initialPath }: { initialPath: PathId }) {
         <div>
           <span className="eyebrow">CHOOSE YOUR DEPTH</span>
           <p>
-            The same material, with more of its arithmetic when you want it.
+            {pathId === 'primer'
+              ? 'The primer’s two reading tracks, plus everything open with its answer notes.'
+              : 'The same material, with more of its arithmetic when you want it.'}
           </p>
         </div>
         <ToggleGroup
@@ -500,9 +527,15 @@ function EssayContent({ initialPath }: { initialPath: PathId }) {
           }}
           aria-label="Reading depth"
         >
-          <ToggleGroupItem value="story">The story</ToggleGroupItem>
-          <ToggleGroupItem value="explore">Explore</ToggleGroupItem>
-          <ToggleGroupItem value="math">The mathematics</ToggleGroupItem>
+          <ToggleGroupItem value="story">
+            {pathId === 'primer' ? 'High-school track' : 'The story'}
+          </ToggleGroupItem>
+          <ToggleGroupItem value="explore">
+            {pathId === 'primer' ? 'Undergraduate track' : 'Explore'}
+          </ToggleGroupItem>
+          <ToggleGroupItem value="math">
+            {pathId === 'primer' ? 'With answer notes' : 'The mathematics'}
+          </ToggleGroupItem>
         </ToggleGroup>
       </div>
       <nav className="chapter-nav" aria-label="Edition chapters">
@@ -513,8 +546,14 @@ function EssayContent({ initialPath }: { initialPath: PathId }) {
               href={'#' + activeSection}
               aria-current="location"
             >
-              <span>BACKGROUND</span>
-              {chapterInfo[activeSection as ChapterId].title}
+              <span>
+                {editionOf(activeSection as ChapterId) !== path.edition
+                  ? path.edition === 'primer'
+                    ? 'FROM THE PAPER'
+                    : 'FROM THE PRIMER'
+                  : 'BACKGROUND'}
+              </span>
+              {chapterInfo[activeSection as ChapterId].short}
             </a>
           )}
         {path.chapters.map((id, i) => (
@@ -525,7 +564,7 @@ function EssayContent({ initialPath }: { initialPath: PathId }) {
             aria-current={activeSection === id ? 'location' : undefined}
           >
             <span>{String(i + 1).padStart(2, '0')}</span>
-            {chapterInfo[id].title}
+            {chapterInfo[id].short}
           </a>
         ))}
         <a
@@ -577,7 +616,7 @@ function EssayContent({ initialPath }: { initialPath: PathId }) {
                 ))}
               </div>
             </div>
-            <HistoricalPlates />
+            <HistoricalPlates ids={paperPlates} />
             <p className="source-note">
               Code-drawn plates in the site’s engraved style. Each is a diagram
               of the idea named beside it, not a portrait, a reconstruction or a
@@ -877,6 +916,9 @@ function EssayContent({ initialPath }: { initialPath: PathId }) {
               <a href={paper} download>
                 Draft, Markdown source <Download size={14} />
               </a>
+              <a href={asset('gum-primer.md')} download>
+                Primer, Markdown source <Download size={14} />
+              </a>
               <a href={asset('source-manifest.json')}>
                 Download manifest <Download size={14} />
               </a>
@@ -1030,6 +1072,17 @@ function EssayContent({ initialPath }: { initialPath: PathId }) {
               </div>
             )}
           </section>
+        </PathChapter>
+        <PathChapter chapter="primer-intro">
+          <PrimerIntro depth={depth} />
+        </PathChapter>
+        {primerChapters.map((chapter) => (
+          <PathChapter chapter={chapter.slug as ChapterId} key={chapter.slug}>
+            <PrimerChapterSection chapter={chapter} depth={depth} />
+          </PathChapter>
+        ))}
+        <PathChapter chapter="primer-end">
+          <PrimerEnd depth={depth} />
         </PathChapter>
       </PathFlow>
       <footer className="site-footer">

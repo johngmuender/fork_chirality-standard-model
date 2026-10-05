@@ -1,5 +1,5 @@
 'use client';
-import { lazy, Suspense, useRef, useState } from 'react';
+import { lazy, Suspense, useId, useRef, useState } from 'react';
 import { Slider } from '@/components/ui/slider';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import {
@@ -112,13 +112,20 @@ export function KnotSection({
   );
 }
 
-export function KnotChapterExplorer({ depth }: { depth: string }) {
+export function KnotChapterExplorer({
+  depth,
+  anchor = 'knot-explorer',
+}: {
+  depth: string;
+  anchor?: string;
+}) {
+  const uid = useId();
   const [view, setView] = useState('3d');
   const [kappa, setKappa] = useState(1 / Math.SQRT2);
   const flatViewControl = useRef<HTMLButtonElement>(null);
   const halo = haloLength(electronMassEv, kappa);
   return (
-    <div className="explorer-shell" id="knot-explorer">
+    <div className="explorer-shell" id={anchor}>
       <div className="explorer-top">
         <span>
           <span className="live-dot" /> KNOT EXPLORER · DEGREE ONE
@@ -171,7 +178,7 @@ export function KnotChapterExplorer({ depth }: { depth: string }) {
             κω₀ drives a relative-rotation field that decays over λ_halo =
             (c_ψ/c)(ħ/Mc) κ/√(1 − κ²).
           </p>
-          <label id="kappa-label" className="foundation-slider-label">
+          <label id={uid + 'kappa-label'} className="foundation-slider-label">
             Clock ratio κ = ω/ω₀{' '}
             <output aria-live="off">{kappa.toFixed(3)}</output>
           </label>
@@ -181,7 +188,7 @@ export function KnotChapterExplorer({ depth }: { depth: string }) {
             step={0.005}
             value={[kappa]}
             onValueChange={(v) => setKappa(Array.isArray(v) ? v[0] : v)}
-            aria-labelledby="kappa-label"
+            aria-labelledby={uid + 'kappa-label'}
           />
           <dl className="intersection-table">
             <div>
@@ -227,7 +234,14 @@ export function KnotChapterExplorer({ depth }: { depth: string }) {
   );
 }
 
-export function ClosureExhibit({ depth }: { depth: string }) {
+export function ClosureExhibit({
+  depth,
+  anchor = 'closure',
+}: {
+  depth: string;
+  anchor?: string;
+}) {
+  const uid = useId();
   const [rotor, setRotor] = useState(50);
   const [pair, setPair] = useState('11');
   const j = rotor / 100;
@@ -236,7 +250,7 @@ export function ClosureExhibit({ depth }: { depth: string }) {
   const admitted = admittedHalfIntegers(window);
   const solution = j < 1 ? closureSolution(Math.min(0.99, j)) : null;
   return (
-    <div className="closure-exhibit" id="closure">
+    <div className="closure-exhibit" id={anchor}>
       <div className="lab-heading">
         <span className="eyebrow">
           LEMMA 4, THEOREM 14, PROPOSITION 12 · THE CLOSURE OF ħ
@@ -270,7 +284,7 @@ export function ClosureExhibit({ depth }: { depth: string }) {
             (a, b) = (3, 1) · sextic–potential dilation
           </ToggleGroupItem>
         </ToggleGroup>
-        <label id="rotor-label" className="foundation-slider-label">
+        <label id={uid + 'rotor-label'} className="foundation-slider-label">
           Rotor number j <output aria-live="off">{j.toFixed(2)}</output>
         </label>
         <Slider
@@ -279,7 +293,7 @@ export function ClosureExhibit({ depth }: { depth: string }) {
           step={1}
           value={[rotor]}
           onValueChange={(v) => setRotor(Array.isArray(v) ? v[0] : v)}
-          aria-labelledby="rotor-label"
+          aria-labelledby={uid + 'rotor-label'}
         />
         <div className="pitch-readouts" aria-live="polite">
           <span>
@@ -328,7 +342,12 @@ export function ClosureExhibit({ depth }: { depth: string }) {
   );
 }
 
-export function ChannelingExhibit() {
+export function ChannelingExhibit({
+  anchor = 'channeling',
+}: {
+  anchor?: string;
+} = {}) {
+  const uid = useId();
   const [crystal, setCrystal] = useState<(typeof crystals)[number]['id']>('Si');
   const [axis, setAxis] = useState<(typeof axes)[number]['id']>('110');
   const [particle, setParticle] =
@@ -358,7 +377,7 @@ export function ChannelingExhibit() {
   return (
     <div
       className="channeling-exhibit"
-      id="channeling"
+      id={anchor}
       ref={host}
       {...demo.handlers}
     >
@@ -407,11 +426,14 @@ export function ChannelingExhibit() {
               </ToggleGroupItem>
             ))}
           </ToggleGroup>
-          <label htmlFor="clock-particle" className="foundation-slider-label">
+          <label
+            htmlFor={uid + 'clock-particle'}
+            className="foundation-slider-label"
+          >
             Particle
           </label>
           <NativeSelect
-            id="clock-particle"
+            id={uid + 'clock-particle'}
             value={particle}
             onChange={(event) =>
               setParticle(event.target.value as typeof particle)
@@ -423,7 +445,10 @@ export function ChannelingExhibit() {
               </NativeSelectOption>
             ))}
           </NativeSelect>
-          <label id="thickness-label" className="foundation-slider-label">
+          <label
+            id={uid + 'thickness-label'}
+            className="foundation-slider-label"
+          >
             Crystal thickness{' '}
             <output aria-live="off">{thickness.toFixed(1)} μm</output>
           </label>
@@ -433,7 +458,7 @@ export function ChannelingExhibit() {
             step={0.1}
             value={[thickness]}
             onValueChange={(v) => setThickness(Array.isArray(v) ? v[0] : v)}
-            aria-labelledby="thickness-label"
+            aria-labelledby={uid + 'thickness-label'}
           />
         </div>
         <AmbientExhibit className="foundation-instrument">
@@ -502,7 +527,12 @@ export function ChannelingExhibit() {
   );
 }
 
-export function BandEdgeExhibit() {
+export function BandEdgeExhibit({
+  anchor = 'band-edge',
+}: {
+  anchor?: string;
+} = {}) {
+  const uid = useId();
   const [kappa, setKappa] = useState(1 / Math.SQRT2);
   const lineEnergy = positroniumLine(kappa);
   const rows = [
@@ -511,7 +541,7 @@ export function BandEdgeExhibit() {
     ['tau', tauMassEv],
   ] as const;
   return (
-    <div className="band-edge-exhibit" id="band-edge">
+    <div className="band-edge-exhibit" id={anchor}>
       <div className="lab-heading">
         <span className="eyebrow">
           PROPOSITION 18 · WHAT EXISTS AT THE BAND EDGE?
@@ -530,7 +560,10 @@ export function BandEdgeExhibit() {
         </p>
       </div>
       <div className="foundation-instrument">
-        <label id="edge-kappa-label" className="foundation-slider-label">
+        <label
+          id={uid + 'edge-kappa-label'}
+          className="foundation-slider-label"
+        >
           Clock ratio κ <output aria-live="off">{kappa.toFixed(3)}</output>
         </label>
         <Slider
@@ -539,7 +572,7 @@ export function BandEdgeExhibit() {
           step={0.005}
           value={[kappa]}
           onValueChange={(v) => setKappa(Array.isArray(v) ? v[0] : v)}
-          aria-labelledby="edge-kappa-label"
+          aria-labelledby={uid + 'edge-kappa-label'}
         />
         <div className="guide-table-wrap">
           <table className="guide-table">

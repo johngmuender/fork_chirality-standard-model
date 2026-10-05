@@ -34,6 +34,10 @@ function Flow({ path }: { path: PathId }) {
                   <a href="#action">Return to the action</a>
                 </details>
               )}
+              {chapter === 'quantum' && <div id="cliff">The cliff</div>}
+              {chapter === 'primer-8' && (
+                <a href="#cliff">Open the paper’s cliff</a>
+              )}
             </section>
           </PathChapter>
         ))}
@@ -108,4 +112,39 @@ it('opens an omitted chapter on an initial deep link', async () => {
   });
   expect(view.container.querySelector('#question')).toBeTruthy();
   expect(document.activeElement?.id).toBe('plates');
+});
+
+it('reaches the paper’s instruments from the primer without leaving the primer path', async () => {
+  vi.useFakeTimers();
+  installMotionPreference(true);
+  Object.defineProperty(HTMLElement.prototype, 'scrollIntoView', {
+    configurable: true,
+    value: vi.fn(),
+  });
+  const view = render(<Flow path="primer" />);
+  await act(async () => {
+    await Promise.resolve();
+  });
+  expect(view.container.querySelector('#quantum')).toBeNull();
+  expect(view.container.querySelector('.path-foreign')).toBeTruthy();
+  expect(
+    view.container.querySelectorAll('.path-foreign .optional-chapter'),
+  ).toHaveLength(0);
+  fireEvent.click(screen.getByRole('button', { name: /List the 13 chapters/ }));
+  expect(
+    view.container.querySelectorAll('.path-foreign .optional-chapter'),
+  ).toHaveLength(13);
+  fireEvent.click(screen.getByRole('button', { name: /Hide the list/ }));
+  fireEvent.click(screen.getByRole('link', { name: 'Open the paper’s cliff' }));
+  await act(async () => {
+    vi.advanceTimersByTime(20);
+  });
+  expect(view.container.querySelector('.path-foreign #quantum')).toBeTruthy();
+  expect(document.activeElement?.id).toBe('cliff');
+  expect(
+    [...view.container.querySelectorAll('.path-chapter')].map((n) =>
+      n.getAttribute('data-chapter'),
+    )[0],
+  ).toBe('primer-intro');
+  view.unmount();
 });

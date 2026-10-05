@@ -1,5 +1,5 @@
 'use client';
-import { useRef, useState } from 'react';
+import { useId, useRef, useState } from 'react';
 import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
 import {
@@ -54,13 +54,18 @@ const links = [
   },
 ] as const;
 
-export function SignChain() {
+export function SignChain({
+  anchor = 'sign-chain',
+}: {
+  anchor?: string;
+} = {}) {
+  const uid = useId();
   const [positive, setPositive] = useState(true);
   const host = useRef<HTMLDivElement>(null);
   const demo = useGentleDemo(host, () => setPositive((p) => !p), 12000);
   const s = positive ? 1 : -1;
   return (
-    <div className="sign-chain" id="sign-chain" ref={host} {...demo.handlers}>
+    <div className="sign-chain" id={anchor} ref={host} {...demo.handlers}>
       <div className="lab-heading">
         <span className="eyebrow">
           PROPOSITION 28 · ONE BIT, ONE PARITY CHECK
@@ -82,9 +87,9 @@ export function SignChain() {
       </div>
       <DemoControl {...demo} />
       <AmbientExhibit className="foundation-instrument chain-instrument">
-        <label className="chain-toggle" htmlFor="handedness-bit">
+        <label className="chain-toggle" htmlFor={uid + 'handedness-bit'}>
           <Switch
-            id="handedness-bit"
+            id={uid + 'handedness-bit'}
             checked={positive}
             onCheckedChange={setPositive}
           />{' '}
@@ -120,7 +125,12 @@ export function SignChain() {
   );
 }
 
-export function MirrorForce() {
+export function MirrorForce({
+  anchor = 'mirror-force',
+}: {
+  anchor?: string;
+} = {}) {
+  const uid = useId();
   const [positive, setPositive] = useState(true);
   const [amplitude, setAmplitude] = useState(30);
   const [separation, setSeparation] = useState(12);
@@ -135,7 +145,7 @@ export function MirrorForce() {
     RL: 1 - s * b,
   };
   return (
-    <div className="mirror-force" id="mirror-force">
+    <div className="mirror-force" id={anchor}>
       <div className="lab-heading">
         <span className="eyebrow">
           PROPOSITION 31 · A MIRROR TEST OF SHORT-RANGE FORCES
@@ -156,9 +166,9 @@ export function MirrorForce() {
         </p>
       </div>
       <div className="foundation-instrument mirror-instrument">
-        <label className="chain-toggle" htmlFor="mirror-bit">
+        <label className="chain-toggle" htmlFor={uid + 'mirror-bit'}>
           <Switch
-            id="mirror-bit"
+            id={uid + 'mirror-bit'}
             checked={positive}
             onCheckedChange={setPositive}
           />{' '}
@@ -178,7 +188,10 @@ export function MirrorForce() {
         </div>
         <div className="ladder-sliders">
           <div>
-            <label id="amplitude-label" className="foundation-slider-label">
+            <label
+              id={uid + 'amplitude-label'}
+              className="foundation-slider-label"
+            >
               Schematic amplitude of 𝒜 at zero separation{' '}
               <output aria-live="off">{amplitude}%</output>
             </label>
@@ -188,11 +201,14 @@ export function MirrorForce() {
               step={1}
               value={[amplitude]}
               onValueChange={(v) => setAmplitude(Array.isArray(v) ? v[0] : v)}
-              aria-labelledby="amplitude-label"
+              aria-labelledby={uid + 'amplitude-label'}
             />
           </div>
           <div>
-            <label id="separation-label" className="foundation-slider-label">
+            <label
+              id={uid + 'separation-label'}
+              className="foundation-slider-label"
+            >
               Separation <output aria-live="off">{separation} μm</output>
             </label>
             <Slider
@@ -201,7 +217,7 @@ export function MirrorForce() {
               step={1}
               value={[separation]}
               onValueChange={(v) => setSeparation(Array.isArray(v) ? v[0] : v)}
-              aria-labelledby="separation-label"
+              aria-labelledby={uid + 'separation-label'}
             />
           </div>
         </div>
@@ -223,12 +239,17 @@ export function MirrorForce() {
   );
 }
 
-export function BirefringenceEndpoint() {
+export function BirefringenceEndpoint({
+  anchor = 'endpoint',
+}: {
+  anchor?: string;
+} = {}) {
+  const uid = useId();
   const [difference, setDifference] = useState(0.6);
   const g = 0.01;
   const beta = 0.5 * g * difference;
   return (
-    <div className="endpoint-exhibit">
+    <div className="endpoint-exhibit" id={anchor}>
       <div className="lab-heading">
         <span className="eyebrow">PROPOSITION 29 · THE ENDPOINT PROPERTY</span>
         <h3>Θ-birefringence depends only on the endpoints.</h3>
@@ -242,7 +263,10 @@ export function BirefringenceEndpoint() {
         </p>
       </div>
       <div className="foundation-instrument">
-        <label id="theta-difference-label" className="foundation-slider-label">
+        <label
+          id={uid + 'theta-difference-label'}
+          className="foundation-slider-label"
+        >
           Θ(o) − Θ(last scattering), schematic units{' '}
           <output aria-live="off">{difference.toFixed(2)}</output>
         </label>
@@ -252,7 +276,7 @@ export function BirefringenceEndpoint() {
           step={0.05}
           value={[difference]}
           onValueChange={(v) => setDifference(Array.isArray(v) ? v[0] : v)}
-          aria-labelledby="theta-difference-label"
+          aria-labelledby={uid + 'theta-difference-label'}
         />
         <div className="mass-equation" aria-live="polite">
           <span>β = ½ g_Θ [Θ(o) − Θ(e)]</span>

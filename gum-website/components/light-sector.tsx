@@ -1,5 +1,5 @@
 'use client';
-import { useRef, useState } from 'react';
+import { useId, useRef, useState } from 'react';
 import { line, scaleLinear } from 'd3';
 import { Slider } from '@/components/ui/slider';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -59,7 +59,12 @@ const theorems = [
   },
 ];
 
-export function DichotomyExhibit() {
+export function DichotomyExhibit({
+  anchor = 'dichotomy',
+}: {
+  anchor?: string;
+} = {}) {
+  const uid = useId();
   const [completion, setCompletion] = useState<Completion>('T');
   const [speedRatio, setSpeedRatio] = useState(3);
   const [time, setTime] = useState(0);
@@ -78,7 +83,7 @@ export function DichotomyExhibit() {
     .y((t) => y(dipoleFieldHistory(t, r, completion, cL, c)));
   const value = dipoleFieldHistory(time, r, completion, cL, c);
   return (
-    <div className="dichotomy-exhibit" id="dichotomy" ref={stage}>
+    <div className="dichotomy-exhibit" id={anchor} ref={stage}>
       <div className="lab-heading">
         <span className="eyebrow">
           THEOREM 6 · WATCH THE FIELD AT A FIXED DISTANCE
@@ -199,7 +204,10 @@ export function DichotomyExhibit() {
               </text>
             </g>
           </svg>
-          <label id="speed-ratio-label" className="foundation-slider-label">
+          <label
+            id={uid + 'speed-ratio-label'}
+            className="foundation-slider-label"
+          >
             Longitudinal speed c_L / c (drawn small so the cones are visible){' '}
             <output aria-live="off">{speedRatio.toFixed(1)}</output>
           </label>
@@ -209,7 +217,7 @@ export function DichotomyExhibit() {
             step={0.1}
             value={[speedRatio]}
             onValueChange={(v) => setSpeedRatio(Array.isArray(v) ? v[0] : v)}
-            aria-labelledby="speed-ratio-label"
+            aria-labelledby={uid + 'speed-ratio-label'}
           />
           <p className="instrument-answer" aria-live="off">
             {completion === 'T'
@@ -249,7 +257,12 @@ export function DichotomyExhibit() {
   );
 }
 
-export function FrameKinematics() {
+export function FrameKinematics({
+  anchor = 'near-field',
+}: {
+  anchor?: string;
+} = {}) {
+  const uid = useId();
   const [baseline, setBaseline] = useState(100);
   const [logSpeed, setLogSpeed] = useState(4);
   const [orientation, setOrientation] = useState('east-west');
@@ -289,12 +302,7 @@ export function FrameKinematics() {
     .y((d) => y(d.arrival * 1e9));
   const bound = bipartiteBound(1e4, 1e-10, 3.7e5, 60);
   return (
-    <div
-      className="frame-kinematics"
-      id="near-field"
-      ref={host}
-      {...demo.handlers}
-    >
+    <div className="frame-kinematics" id={anchor} ref={host} {...demo.handlers}>
       <div className="lab-heading">
         <span className="eyebrow">
           PROPOSITION 4 · A MATERIAL FRAME HAS A SIDEREAL SIGNATURE
@@ -358,7 +366,10 @@ export function FrameKinematics() {
                 Along the Earth’s axis
               </ToggleGroupItem>
             </ToggleGroup>
-            <label id="baseline-label" className="foundation-slider-label">
+            <label
+              id={uid + 'baseline-label'}
+              className="foundation-slider-label"
+            >
               Baseline r <output aria-live="off">{baseline} m</output>
             </label>
             <Slider
@@ -367,9 +378,9 @@ export function FrameKinematics() {
               step={10}
               value={[baseline]}
               onValueChange={(v) => setBaseline(Array.isArray(v) ? v[0] : v)}
-              aria-labelledby="baseline-label"
+              aria-labelledby={uid + 'baseline-label'}
             />
-            <label id="cl-label" className="foundation-slider-label">
+            <label id={uid + 'cl-label'} className="foundation-slider-label">
               c_L / c{' '}
               <output aria-live="off">
                 10{'⁰¹²³⁴⁵⁶'[logSpeed] ?? logSpeed}
@@ -381,7 +392,7 @@ export function FrameKinematics() {
               step={1}
               value={[logSpeed]}
               onValueChange={(v) => setLogSpeed(Array.isArray(v) ? v[0] : v)}
-              aria-labelledby="cl-label"
+              aria-labelledby={uid + 'cl-label'}
             />
           </div>
           <p

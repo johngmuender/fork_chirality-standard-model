@@ -2,13 +2,16 @@ import { copyFileSync, readFileSync, writeFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { resolve } from 'node:path';
+import { parsePrimer, renderPrimerModule } from './primer-parser.mjs';
 
-// The draft lives in gum/paper at the repository root; the site serves a
-// byte-identical copy and records its hash so a reader can check the download.
+// The draft and the primer live under gum/ at the repository root; the site
+// serves byte-identical copies, records their hashes, and compiles the primer
+// into the typed module the fifth reading path renders.
 const site = fileURLToPath(new URL('../', import.meta.url));
 const root = resolve(site, '..');
 const files = {
   'gum-paper.md': 'gum/paper/gum-paper.md',
+  'gum-primer.md': 'gum/primer/gum-primer.md',
 };
 const check = process.argv.includes('--check');
 const manifest = {
@@ -30,6 +33,14 @@ const manifest = {
     };
   }),
 };
+const primer = renderPrimerModule(
+  parsePrimer(readFileSync(resolve(root, files['gum-primer.md']), 'utf8')),
+);
+const primerTarget = resolve(site, 'lib/primer-content.ts');
+if (check) {
+  if (readFileSync(primerTarget, 'utf8') !== primer)
+    throw new Error('Stale primer module: run npm run sync:assets');
+} else writeFileSync(primerTarget, primer);
 const json = JSON.stringify(manifest, null, 2) + '\n';
 const target = resolve(site, 'public/source-manifest.json');
 if (check) {
@@ -37,5 +48,5 @@ if (check) {
     throw new Error('Stale asset manifest');
 } else writeFileSync(target, json);
 console.log(
-  `${check ? 'Verified' : 'Synced'} ${manifest.files.length} download against the canonical draft.`,
+  `${check ? 'Verified' : 'Synced'} ${manifest.files.length} downloads and the compiled primer against the canonical sources.`,
 );

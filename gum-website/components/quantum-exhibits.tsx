@@ -1,5 +1,5 @@
 'use client';
-import { useRef, useState } from 'react';
+import { useId, useRef, useState } from 'react';
 import { line, scaleLinear } from 'd3';
 import { Slider } from '@/components/ui/slider';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
@@ -44,7 +44,14 @@ const sci = (n: number, digits = 1) => {
 
 type Mode = Hosting | 'schmidt';
 
-export function CliffExhibit({ depth }: { depth: string }) {
+export function CliffExhibit({
+  depth,
+  anchor = 'cliff',
+}: {
+  depth: string;
+  anchor?: string;
+}) {
+  const uid = useId();
   const [mode, setMode] = useState<Mode>('volume');
   const [logScale, setLogScale] = useState(Math.log10(1.5e-27));
   const [logKnob, setLogKnob] = useState(-10);
@@ -90,7 +97,7 @@ export function CliffExhibit({ depth }: { depth: string }) {
     .y((n) => y(Math.max(-12, probability(n))));
   const budget = gateBudget(Math.max(2, Math.round(location)), 'all-to-all');
   return (
-    <div className="cliff-exhibit" id="cliff" ref={host} {...demo.handlers}>
+    <div className="cliff-exhibit" id={anchor} ref={host} {...demo.handlers}>
       <div className="lab-heading">
         <span className="eyebrow">
           THEOREMS 9–12 · DENSE STORAGE AND THE MIRROR-CIRCUIT CLIFF
@@ -173,7 +180,7 @@ export function CliffExhibit({ depth }: { depth: string }) {
               𝒫 = P_ret / F_noise, log scale · n_q →
             </text>
           </svg>
-          <label id="scale-label" className="foundation-slider-label">
+          <label id={uid + 'scale-label'} className="foundation-slider-label">
             Structural scale ℓ_s{' '}
             <output aria-live="off">{sci(structuralScale)} m</output>
           </label>
@@ -183,9 +190,9 @@ export function CliffExhibit({ depth }: { depth: string }) {
             step={0.1}
             value={[logScale]}
             onValueChange={(v) => setLogScale(Array.isArray(v) ? v[0] : v)}
-            aria-labelledby="scale-label"
+            aria-labelledby={uid + 'scale-label'}
           />
-          <label id="knob-label" className="foundation-slider-label">
+          <label id={uid + 'knob-label'} className="foundation-slider-label">
             {knobLabel} <output aria-live="off">{sci(10 ** knob)}</output>
           </label>
           <Slider
@@ -194,7 +201,7 @@ export function CliffExhibit({ depth }: { depth: string }) {
             step={0.1}
             value={[knob]}
             onValueChange={(v) => setLogKnob(Array.isArray(v) ? v[0] : v)}
-            aria-labelledby="knob-label"
+            aria-labelledby={uid + 'knob-label'}
           />
           <p
             className="instrument-answer"
@@ -254,7 +261,12 @@ export function CliffExhibit({ depth }: { depth: string }) {
   );
 }
 
-export function TimingExhibit() {
+export function TimingExhibit({
+  anchor = 'timing',
+}: {
+  anchor?: string;
+} = {}) {
+  const uid = useId();
   const [logBaseline, setLogBaseline] = useState(4);
   const [logSpeed, setLogSpeed] = useState(4);
   const [logTiming, setLogTiming] = useState(-10);
@@ -270,7 +282,7 @@ export function TimingExhibit() {
     integration,
   );
   return (
-    <div className="timing-exhibit" id="timing">
+    <div className="timing-exhibit" id={anchor}>
       <div className="lab-heading">
         <span className="eyebrow">
           PROPOSITION 10 AND THEOREM 13 · FINITE-SPEED NONLOCALITY
@@ -294,7 +306,10 @@ export function TimingExhibit() {
       <div className="foundation-instrument timing-instrument">
         <div className="timing-grid">
           <div>
-            <label id="baseline-log-label" className="foundation-slider-label">
+            <label
+              id={uid + 'baseline-log-label'}
+              className="foundation-slider-label"
+            >
               Baseline L <output aria-live="off">{sci(baseline)} m</output>
             </label>
             <Slider
@@ -303,11 +318,14 @@ export function TimingExhibit() {
               step={0.1}
               value={[logBaseline]}
               onValueChange={(v) => setLogBaseline(Array.isArray(v) ? v[0] : v)}
-              aria-labelledby="baseline-log-label"
+              aria-labelledby={uid + 'baseline-log-label'}
             />
           </div>
           <div>
-            <label id="speed-log-label" className="foundation-slider-label">
+            <label
+              id={uid + 'speed-log-label'}
+              className="foundation-slider-label"
+            >
               Assumed c_L / c{' '}
               <output aria-live="off">{sci(10 ** logSpeed, 0)}</output>
             </label>
@@ -317,11 +335,14 @@ export function TimingExhibit() {
               step={0.1}
               value={[logSpeed]}
               onValueChange={(v) => setLogSpeed(Array.isArray(v) ? v[0] : v)}
-              aria-labelledby="speed-log-label"
+              aria-labelledby={uid + 'speed-log-label'}
             />
           </div>
           <div>
-            <label id="timing-label" className="foundation-slider-label">
+            <label
+              id={uid + 'timing-label'}
+              className="foundation-slider-label"
+            >
               Timing mismatch δt{' '}
               <output aria-live="off">{sci(10 ** logTiming)} s</output>
             </label>
@@ -331,11 +352,14 @@ export function TimingExhibit() {
               step={0.1}
               value={[logTiming]}
               onValueChange={(v) => setLogTiming(Array.isArray(v) ? v[0] : v)}
-              aria-labelledby="timing-label"
+              aria-labelledby={uid + 'timing-label'}
             />
           </div>
           <div>
-            <label id="integration-label" className="foundation-slider-label">
+            <label
+              id={uid + 'integration-label'}
+              className="foundation-slider-label"
+            >
               Integration window T_int{' '}
               <output aria-live="off">{integration} s</output>
             </label>
@@ -345,7 +369,7 @@ export function TimingExhibit() {
               step={1}
               value={[integration]}
               onValueChange={(v) => setIntegration(Array.isArray(v) ? v[0] : v)}
-              aria-labelledby="integration-label"
+              aria-labelledby={uid + 'integration-label'}
             />
           </div>
         </div>
@@ -384,11 +408,17 @@ export function TimingExhibit() {
   );
 }
 
-export function TowerPanel({ depth }: { depth: string }) {
+export function TowerPanel({
+  depth,
+  anchor = 'tower',
+}: {
+  depth: string;
+  anchor?: string;
+}) {
   const depths = [0, 1, 2, 3, 4];
   const knots = [2, 3, 4];
   return (
-    <div className="tower-panel" id="tower">
+    <div className="tower-panel" id={anchor}>
       <div className="lab-heading">
         <span className="eyebrow">THE TOWER OF CONDITIONAL FIELDS</span>
         <h3>

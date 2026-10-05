@@ -247,7 +247,11 @@ near(
   1e-9,
   'half per added qubit past the cliff, up to the n_q prefactor',
 );
-assert.equal(returnProbability(21, 2 ** 20), 1, 'the floor clamps at 1 before the cliff');
+assert.equal(
+  returnProbability(21, 2 ** 20),
+  1,
+  'the floor clamps at 1 before the cliff',
+);
 for (const n of [235, 330]) {
   const effective = 2 ** n;
   near(
@@ -258,9 +262,24 @@ for (const n of [235, 330]) {
   );
 }
 const budget = gateBudget(300, 'all-to-all');
-near(budget.gates, 300 * Math.log2(300), 1e-9, 'n_q log₂n_q gates in a log-depth all-to-all scrambler');
-near(budget.error, 7 / budget.gates, 1e-15, 'ε ≲ 7 / gates keeps F_noise ≥ e⁻⁷');
-near(gateBudget(300, 'nearest-neighbour').gates, 300 ** 1.5, 1e-9, 'n_q^{3/2} gates on a nearest-neighbour layout');
+near(
+  budget.gates,
+  300 * Math.log2(300),
+  1e-9,
+  'n_q log₂n_q gates in a log-depth all-to-all scrambler',
+);
+near(
+  budget.error,
+  7 / budget.gates,
+  1e-15,
+  'ε ≲ 7 / gates keeps F_noise ≥ e⁻⁷',
+);
+near(
+  gateBudget(300, 'nearest-neighbour').gates,
+  300 ** 1.5,
+  1e-9,
+  'n_q^{3/2} gates on a nearest-neighbour layout',
+);
 assert.equal(towerSchmidtRank(0, 3), 1);
 assert.equal(towerSchmidtRank(1, 2), 4);
 assert.throws(() => cliffLocation(0));

@@ -1,5 +1,5 @@
 'use client';
-import { useRef, useState } from 'react';
+import { useId, useRef, useState } from 'react';
 import { CheckCircle2, RotateCcw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
@@ -30,7 +30,12 @@ import {
   weakCoupling,
 } from '@/lib/gum-sectors';
 
-export function FrustrationLadder() {
+export function FrustrationLadder({
+  anchor = 'families',
+}: {
+  anchor?: string;
+} = {}) {
+  const uid = useId();
   const [A, setA] = useState(frustrationIntegrals.A);
   const [B, setB] = useState(frustrationIntegrals.B);
   const ladder = leptonLadder(A, B);
@@ -56,7 +61,7 @@ export function FrustrationLadder() {
   ];
   const scale = 560 / 6.5;
   return (
-    <div className="ladder-exhibit" id="families">
+    <div className="ladder-exhibit" id={anchor}>
       <div className="lab-heading">
         <span className="eyebrow">
           SECTION VIII A · THREE FAMILIES AS FRUSTRATION CLASSES
@@ -120,7 +125,10 @@ export function FrustrationLadder() {
         </svg>
         <div className="ladder-sliders">
           <div>
-            <label id="integral-a-label" className="foundation-slider-label">
+            <label
+              id={uid + 'integral-a-label'}
+              className="foundation-slider-label"
+            >
               Per-belt integral A{' '}
               <output aria-live="off">{A.toFixed(1)}</output>
             </label>
@@ -130,11 +138,14 @@ export function FrustrationLadder() {
               step={0.1}
               value={[A]}
               onValueChange={(v) => setA(Array.isArray(v) ? v[0] : v)}
-              aria-labelledby="integral-a-label"
+              aria-labelledby={uid + 'integral-a-label'}
             />
           </div>
           <div>
-            <label id="integral-b-label" className="foundation-slider-label">
+            <label
+              id={uid + 'integral-b-label'}
+              className="foundation-slider-label"
+            >
               Belt-coupling integral B{' '}
               <output aria-live="off">{B.toFixed(1)}</output>
             </label>
@@ -144,7 +155,7 @@ export function FrustrationLadder() {
               step={0.1}
               value={[B]}
               onValueChange={(v) => setB(Array.isArray(v) ? v[0] : v)}
-              aria-labelledby="integral-b-label"
+              aria-labelledby={uid + 'integral-b-label'}
             />
           </div>
         </div>
@@ -165,11 +176,18 @@ export function FrustrationLadder() {
   );
 }
 
-export function ElectroweakSkeleton({ depth }: { depth: string }) {
+export function ElectroweakSkeleton({
+  depth,
+  anchor = 'electroweak',
+}: {
+  depth: string;
+  anchor?: string;
+}) {
+  const uid = useId();
   const [theta, setTheta] = useState(0.55);
   const sector = neutralSector(theta);
   return (
-    <div className="electroweak-exhibit" id="electroweak">
+    <div className="electroweak-exhibit" id={anchor}>
       <div className="lab-heading">
         <span className="eyebrow">
           PROPOSITION 19 · PROTECTED DIAGONALISATION
@@ -222,7 +240,7 @@ export function ElectroweakSkeleton({ depth }: { depth: string }) {
             </span>
           </div>
         </div>
-        <label id="theta-label" className="foundation-slider-label">
+        <label id={uid + 'theta-label'} className="foundation-slider-label">
           Mixing modulus ϑ = tan θ_w{' '}
           <output aria-live="off">{theta.toFixed(2)}</output>
         </label>
@@ -232,7 +250,7 @@ export function ElectroweakSkeleton({ depth }: { depth: string }) {
           step={0.01}
           value={[theta]}
           onValueChange={(v) => setTheta(Array.isArray(v) ? v[0] : v)}
-          aria-labelledby="theta-label"
+          aria-labelledby={uid + 'theta-label'}
         />
         <p className="instrument-answer">
           ϑ ≈ 0.55 is a constitutive modulus [IM] in the same class as α;
@@ -264,7 +282,12 @@ export function ElectroweakSkeleton({ depth }: { depth: string }) {
   );
 }
 
-export function AnomalyTiling() {
+export function AnomalyTiling({
+  anchor = 'anomaly-sums',
+}: {
+  anchor?: string;
+} = {}) {
+  const uid = useId();
   const [included, setIncluded] = useState(familyContent.map(() => true));
   const [channel, setChannel] = useState(3);
   const host = useRef<HTMLDivElement>(null);
@@ -277,12 +300,7 @@ export function AnomalyTiling() {
   const values = familyContent.map((_, i) => tilingContributions(i)[channel]);
   const extent = Math.max(1, ...values.map(Math.abs));
   return (
-    <div
-      className="anomaly-exhibit"
-      id="anomaly-sums"
-      ref={host}
-      {...demo.handlers}
-    >
+    <div className="anomaly-exhibit" id={anchor} ref={host} {...demo.handlers}>
       <DemoControl {...demo} />
       <div className="lab-heading">
         <span className="eyebrow">
@@ -308,11 +326,11 @@ export function AnomalyTiling() {
           {familyContent.map((m, i) => (
             <label
               key={m.id}
-              htmlFor={'tile-' + m.id}
+              htmlFor={uid + 'tile-' + m.id}
               className={included[i] ? 'included' : ''}
             >
               <Switch
-                id={'tile-' + m.id}
+                id={uid + 'tile-' + m.id}
                 checked={included[i]}
                 onCheckedChange={(checked) =>
                   setIncluded((prev) =>
@@ -464,10 +482,14 @@ export function AnomalyTiling() {
   );
 }
 
-export function HolonomyCounter() {
+export function HolonomyCounter({
+  anchor = 'holonomy',
+}: {
+  anchor?: string;
+} = {}) {
   const [families, setFamilies] = useState(3);
   return (
-    <div className="holonomy-exhibit">
+    <div className="holonomy-exhibit" id={anchor}>
       <div className="lab-heading">
         <span className="eyebrow">PROPOSITION 21 · CP BY HOLONOMY</span>
         <h3>(N − 1)(N − 2)/2 irreducible phases.</h3>
