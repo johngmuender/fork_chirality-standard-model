@@ -850,9 +850,7 @@ function EssayContent({ initialPath }: { initialPath: PathId }) {
                 <a href={asset('source-manifest.json')}>
                   Download manifest <Download size={14} />
                 </a>
-                <a
-                  href={repository + '/archive/refs/heads/' + snapshot + '.zip'}
-                >
+                <a href={repository + '/archive/' + snapshot + '.zip'}>
                   Branch ZIP <Download size={14} />
                 </a>
               </div>
