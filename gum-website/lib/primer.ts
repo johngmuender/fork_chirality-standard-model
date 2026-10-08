@@ -323,8 +323,7 @@ export function primerSectionById(
     if (section.id === id)
       return {
         number: null,
-        title:
-          section.title.charAt(0) + section.title.slice(1).toLowerCase(),
+        title: section.title.charAt(0) + section.title.slice(1).toLowerCase(),
       };
   for (const chapter of primerChapters)
     for (const section of chapter.sections)
