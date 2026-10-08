@@ -139,7 +139,7 @@ function walk(dir) {
   return readdirSync(dir).flatMap((name) => {
     const path = resolve(dir, name);
     assert(
-      !/^(?:\.git|\.env.*|node_modules|wrangler\.json)$/.test(name),
+      !/^(?:\.git|\.env.*|node_modules)$/.test(name),
       'Private or server file in public output: ' + path,
     );
     return statSync(path).isDirectory() ? walk(path) : [path];
