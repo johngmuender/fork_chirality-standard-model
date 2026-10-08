@@ -37,11 +37,11 @@ The edition is a static export: `npm run build` in `gum-website` writes it to `g
 
 ### GitHub Pages
 
-[`.github/workflows/pages.yml`](.github/workflows/pages.yml) publishes `main` on every push. Once, in the repository's Settings → Pages, set Source to GitHub Actions, then push to `main` or re-run the workflow. The edition is served at `https://johngmuender.github.io/gumai-website-intro-v5-1/`, or at a custom domain set on the same page; the workflow reads the address from Pages. Pages needs a public repository, or a paid plan for a private one.
+[`.github/workflows/pages.yml`](.github/workflows/pages.yml) publishes the default branch on every push to it. Once, in the repository's Settings → Pages, set Source to GitHub Actions, then push to the default branch or run the workflow from the Actions tab. The edition is served at `https://johngmuender.github.io/gumai-website-intro-v5-1/`, or at a custom domain set on the same page; the workflow reads the address from Pages. Pages needs a public repository, or a paid plan for a private one.
 
 ### Vercel
 
-Add New → Project, import the repository and deploy with the defaults. [`vercel.json`](vercel.json) supplies the install command, build command and output directory, so leave the root directory at the repository root. Pushes to `main` deploy to production and other branches get preview deployments; the canonical link names the production domain.
+Add New → Project, import the repository and deploy with the defaults. [`vercel.json`](vercel.json) supplies the install command, build command and output directory, so leave the root directory at the repository root. Pushes to the production branch deploy to production and other branches get preview deployments; the canonical link names the production domain. Vercel picks `main`, then `master`, then the repository's default branch; change it under the project's Settings → Git.
 
 ### Cloudflare Workers
 
