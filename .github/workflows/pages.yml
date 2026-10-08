@@ -1,0 +1,73 @@
+name: GitHub Pages
+
+# Checks every pull request. Pushes to main also publish the edition to the
+# repository's project page, once Settings > Pages > Source is GitHub Actions.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.event_name == 'pull_request' && format('pages-{0}', github.ref) || 'pages' }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: read
+    defaults:
+      run:
+        working-directory: gum-website
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: gum-website/package-lock.json
+      - run: npm ci
+      # Copy the texts from gum/; the committed primer module must not change.
+      - run: |
+          npm run sync:assets
+          git diff --exit-code
+      - run: npm run check
+      - run: npm run typecheck
+      - run: npm run lint
+      - name: Read the project page's address
+        id: pages
+        if: github.event_name != 'pull_request'
+        uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
+      # A pull request is built as if for <owner>.github.io/<repository>.
+      - name: Build and check the export
+        env:
+          BASE_PATH: ${{ github.event_name == 'pull_request' && format('/{0}', github.event.repository.name) || steps.pages.outputs.base_path }}
+          SITE_ORIGIN: ${{ github.event_name == 'pull_request' && format('https://{0}.github.io', github.repository_owner) || steps.pages.outputs.origin }}
+        run: |
+          npm run build
+          npm run check:export
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        if: github.event_name != 'pull_request'
+        with:
+          path: gum-website/dist/client${{ steps.pages.outputs.base_path }}
+
+  deploy:
+    if: github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
