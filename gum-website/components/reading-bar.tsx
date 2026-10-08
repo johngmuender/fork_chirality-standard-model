@@ -204,12 +204,15 @@ function ContentsDrawer({
   const { enabled: motionEnabled } = useMotion();
   const [open, setOpen] = useState(false);
   const [forgotten, setForgotten] = useState(false);
-  // Navigation waits until the drawer has closed, so its focus return and
-  // exit animation cannot pull the page back.
+  // Navigation waits until the drawer has closed, so its exit animation cannot
+  // pull the page back. The drawer decides where focus returns only as it
+  // unmounts, after that, so `leaving` lasts until it opens again.
   const pending = useRef<(() => void) | null>(null);
+  const leaving = useRef(false);
   const after = (action: () => void) => (event: MouseEvent) => {
     event.preventDefault();
     pending.current = action;
+    leaving.current = true;
     setOpen(false);
   };
   const read = journey.memory.read;
@@ -240,7 +243,9 @@ function ContentsDrawer({
       open={open}
       onOpenChange={(next) => {
         setOpen(next);
-        if (next) setForgotten(false);
+        if (!next) return;
+        setForgotten(false);
+        leaving.current = false;
       }}
       modal="trap-focus"
       onOpenChangeComplete={(isOpen) => {
@@ -258,7 +263,7 @@ function ContentsDrawer({
         side="left"
         className={'contents-drawer' + (motionEnabled ? '' : ' is-still')}
         data-edition={path.edition}
-        finalFocus={() => !pending.current}
+        finalFocus={() => !leaving.current}
       >
         <SheetHeader className="contents-head">
           <span className="eyebrow">
