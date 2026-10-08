@@ -1,6 +1,12 @@
 /* The reader's journey: the primer first, the paper's routes beside it, and the
    way through either one. Gold marks the primer, blue the paper. */
 
+/* A jump target takes focus so that Tab continues from it; a ring around a
+   whole chapter would mark nothing. */
+main [tabindex='-1']:focus {
+  outline: none;
+}
+
 /* The opening screen. */
 .hero-copy > .eyebrow {
   color: var(--tone-e7c795);
@@ -920,7 +926,11 @@ body:has(.contents-drawer.is-still) [data-slot='sheet-overlay'] {
   cursor: default;
 }
 
-/* Inside the flow: part openers, chapter ends, the way back, the finale. */
+/* Inside the flow: part openers, chapter ends, the way back, the finale. A
+   chapter lands just under the reading bar; its own top padding is the margin. */
+.path-flow .section {
+  scroll-margin-top: 0;
+}
 .part-opener {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
