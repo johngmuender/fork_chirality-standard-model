@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
+import { asset } from '@/lib/assets';
 import './globals.css';
 import './exhibits.css';
 import './physics.css';
@@ -19,19 +20,22 @@ const geistMono = Geist_Mono({
   subsets: ['latin'],
 });
 
-// The static export is served from a project page; the origin and base path are
-// fixed at build time so the canonical URL matches where GitHub Pages serves it.
-const siteOrigin =
-  process.env.NEXT_PUBLIC_SITE_ORIGIN ?? 'https://johngmuender.github.io';
-const canonical = siteOrigin + (process.env.NEXT_PUBLIC_BASE_PATH ?? '') + '/';
+// The origin and base path are fixed at build time (site-address.mjs), so the
+// canonical URL names where the export is published, or is left out.
+const siteOrigin = process.env.NEXT_PUBLIC_SITE_ORIGIN;
+const canonical =
+  siteOrigin && siteOrigin + (process.env.NEXT_PUBLIC_BASE_PATH ?? '') + '/';
 
 export const metadata: Metadata = {
   title:
     'What Keeps the Books? The GUM Material Primer and the Draft It Teaches — An Interactive Edition',
   description:
     'The GUM Material Primer as an interactive edition: sixteen chapters that teach the GUM program from the ground up, each ending where the working draft, “What Material Could Possess Quantum Mechanics as Its Coarse-Grained Bookkeeping?”, takes it further: a material with positions and orientations, light as its locked wave, a knot as a particle, a tower of fields as the wave function, and thirty stakes with printed kills.',
-  metadataBase: new URL(canonical),
-  alternates: { canonical },
+  ...(canonical && {
+    metadataBase: new URL(canonical),
+    alternates: { canonical },
+  }),
+  icons: { icon: { url: asset('favicon.svg'), type: 'image/svg+xml' } },
 };
 
 export default function RootLayout({

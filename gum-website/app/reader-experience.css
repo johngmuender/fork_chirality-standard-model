@@ -1,11 +1,4 @@
 /* Reader routes change document order; hidden chapters are not mounted. */
-.geometry-plain-reading {
-  max-width: 850px;
-  font-size: 18px;
-  line-height: 1.8;
-  color: var(--muted-foreground);
-  margin: 35px 0;
-}
 .path-flow {
   counter-reset: reader-chapter;
 }
@@ -79,31 +72,10 @@
   padding-left: 0;
   padding-right: 0;
 }
-.geometry-depth {
-  margin: 30px 0;
-}
 [data-slot='tabs-content']:focus-visible {
   outline: 2px solid #a2c9fa;
   outline-offset: 5px;
   border-radius: 4px;
-}
-.geometry-depth > summary {
-  cursor: pointer;
-  padding: 18px 0;
-  display: flex;
-  justify-content: space-between;
-  border-block: 1px solid var(--border);
-  font-size: 16px;
-  color: var(--primary);
-}
-.geometry-depth[open] > summary {
-  margin-bottom: 22px;
-}
-.geometry-depth[open] > summary span {
-  transform: rotate(45deg);
-}
-.geometry-depth > summary::marker {
-  content: '';
 }
 .motion-control {
   font-size: 13px;
@@ -125,9 +97,6 @@
 }
 .explorer-top .demo-control {
   margin: 0;
-}
-.wu-experiment .demo-control {
-  margin: 8px 0;
 }
 .hero-art > .ambient-exhibit {
   width: 100%;
@@ -212,31 +181,6 @@
   font-size: 13px;
   padding: 0 10px 15px;
 }
-.particle-canvas {
-  height: 360px;
-}
-.mass-layout .particle-canvas {
-  height: 400px;
-}
-.particle-field-labels {
-  margin-top: -12px;
-}
-.particle-field-labels span {
-  font-size: 12px;
-}
-.particle-turn {
-  font-size: 14px;
-}
-.field-view {
-  border-radius: 14px;
-  background: radial-gradient(ellipse at 50% 40%, #1a354d, #091320 72%);
-}
-.particle-scene {
-  padding: 8px 0 16px;
-}
-.instrument-note {
-  min-height: 54px;
-}
 .balance-motion {
   position: relative;
 }
@@ -254,24 +198,6 @@
     width 1.2s ease,
     fill 1.2s ease;
 }
-.symmetry-motion {
-  position: relative;
-}
-.symmetry-orbit {
-  position: absolute;
-  width: 39%;
-  top: 10%;
-  left: 5%;
-  color: #e8c18e;
-  opacity: 0.6;
-  animation: orbit 55s linear infinite;
-  pointer-events: none;
-}
-.emission-dots circle {
-  animation: emission-flow 5s linear infinite;
-  animation-delay: var(--emission-delay, 0s);
-  transform-origin: 0 0;
-}
 .collapse-instrument .option rect {
   animation: option-breathe 8s ease-in-out infinite;
 }
@@ -280,10 +206,6 @@
 }
 .collapse-instrument .option:nth-child(3n) rect {
   animation-delay: -4s;
-}
-.ambient-exhibit .survivor-banner {
-  background-size: 180% 180%;
-  animation: survivor-light 18s ease-in-out infinite;
 }
 .ambient-exhibit .live-verification {
   position: relative;
@@ -297,31 +219,6 @@
   height: 1px;
   background: linear-gradient(90deg, transparent, var(--primary), transparent);
   animation: scan-rule 12s ease-in-out infinite;
-}
-.ambient-exhibit .three-families > span {
-  animation: family-breathe 9s ease-in-out infinite;
-}
-.ambient-exhibit .three-families > span:nth-child(2) {
-  animation-delay: -3s;
-}
-.ambient-exhibit .three-families > span:nth-child(3) {
-  animation-delay: -6s;
-}
-@keyframes emission-flow {
-  0% {
-    transform: scale(0.15);
-    opacity: 0;
-  }
-  18% {
-    opacity: 0.9;
-  }
-  85% {
-    opacity: 0.6;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 0;
-  }
 }
 @keyframes axis-flow {
   to {
@@ -337,15 +234,6 @@
     stroke-opacity: 1;
   }
 }
-@keyframes survivor-light {
-  0%,
-  100% {
-    background-position: 0% 30%;
-  }
-  50% {
-    background-position: 100% 70%;
-  }
-}
 @keyframes scan-rule {
   0%,
   100% {
@@ -355,15 +243,6 @@
   50% {
     transform: translateX(220%);
     opacity: 0.8;
-  }
-}
-@keyframes family-breathe {
-  0%,
-  100% {
-    border-color: var(--border);
-  }
-  50% {
-    border-color: var(--primary);
   }
 }
 /* Pause means pause, including CSS motion. Reduced motion retains every control/result. */
@@ -417,10 +296,6 @@
   .three-canvas {
     height: 370px;
   }
-  .particle-canvas,
-  .mass-layout .particle-canvas {
-    height: 330px;
-  }
   .explorer-top {
     flex-wrap: wrap;
     gap: 10px;
@@ -431,9 +306,6 @@
   .ambient-exhibit *::before {
     animation: none !important;
     transition-duration: 0s !important;
-  }
-  .emission-dots circle {
-    opacity: 0.85;
   }
   ::view-transition-old(root),
   ::view-transition-new(root) {

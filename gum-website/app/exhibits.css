@@ -1,24 +1,4 @@
 /* Shared motion vocabulary for the interactive exhibits. */
-.three-families > span {
-  transition:
-    transform 0.65s,
-    color 0.65s,
-    border-color 0.65s;
-}
-.three-families.dual-families > span {
-  transform: rotateY(180deg);
-  color: var(--tone-f1a17d);
-  border-color: var(--tone-f1a17d);
-}
-.three-families.dual-families > span small {
-  transform: rotateY(180deg);
-}
-.three-families > span:nth-child(2) {
-  transition-delay: 0.08s;
-}
-.three-families > span:nth-child(3) {
-  transition-delay: 0.16s;
-}
 .check-report > div {
   animation: exhibit-in 0.45s ease both;
 }
@@ -46,21 +26,6 @@
     stroke 0.65s,
     opacity 0.65s,
     r 0.65s;
-}
-.root-network line {
-  transition:
-    stroke 0.65s,
-    opacity 0.65s,
-    stroke-width 0.65s;
-}
-.spectrum-map > div {
-  transition:
-    opacity 0.7s,
-    background 0.7s,
-    filter 0.7s;
-}
-.family-equation {
-  animation: exhibit-in 0.45s ease;
 }
 .glossary-term {
   display: inline;
@@ -287,7 +252,6 @@
   margin: 0 0 20px;
 }
 .depth-control [data-slot='toggle-group'],
-.branching-header [data-slot='toggle-group'],
 .view-selector {
   background: var(--tone-152335);
   padding: 5px;
@@ -296,7 +260,6 @@
   border-radius: 4px !important;
 }
 .depth-control [data-slot='toggle-group-item'],
-.branching-header [data-slot='toggle-group-item'],
 .view-selector [data-slot='toggle-group-item'] {
   font-size: 12px;
   font-weight: 400;
@@ -309,7 +272,6 @@
     color 0.3s;
 }
 .depth-control [data-pressed],
-.branching-header [data-pressed],
 .view-selector [data-pressed] {
   background: var(--tone-2b4666) !important;
   color: var(--tone-e6f0fa) !important;
@@ -356,12 +318,6 @@
 .unpack-panel[open] > [data-slot='tabs'] {
   animation: exhibit-in 0.5s ease;
 }
-.candidate-unpack {
-  padding-bottom: 0;
-}
-.candidate-unpack[open] {
-  padding-bottom: 25px;
-}
 .explorer-invitation {
   font-size: 15px;
   line-height: 1.8;
@@ -369,161 +325,8 @@
   max-width: 850px;
   margin: -10px 0 28px;
 }
-.timeline-portraits {
-  margin: 20px 0;
-}
-.timeline-portraits img {
-  width: 100%;
-  height: auto;
-  border-radius: 3px;
-}
-.timeline-portraits figcaption {
-  font-size: 12px;
-  line-height: 1.6;
-  color: var(--tone-90a4ba);
-  margin-top: 10px;
-}
-.wu-portrait img {
-  height: 570px;
-  object-fit: cover;
-  object-position: center;
-  filter: none;
-  opacity: 1;
-}
 .history-layout {
   align-items: start;
-}
-.wu-experiment {
-  display: grid;
-  grid-template-columns: 1fr 0.85fr;
-  gap: 60px;
-  border-top: 1px solid var(--tone-2e455e);
-  border-bottom: 1px solid var(--tone-2e455e);
-  padding: 38px 0;
-  margin: 20px 0 95px;
-  align-items: center;
-}
-.wu-experiment h3 {
-  font-size: 36px;
-  margin: 16px 0 20px;
-}
-.wu-experiment p {
-  font-size: 15px;
-  color: var(--tone-a7bad1);
-  max-width: 600px;
-}
-.wu-experiment label {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin: 25px 0 18px;
-  font-size: 13px;
-  color: var(--tone-b0cae6);
-  cursor: pointer;
-}
-.wu-experiment small {
-  font-size: 12px;
-  line-height: 1.8;
-  color: var(--tone-7794b1);
-  display: block;
-  max-width: 520px;
-}
-.wu-diagram svg {
-  width: 100%;
-  max-height: 350px;
-}
-.symmetry-prelude {
-  display: grid;
-  grid-template-columns: 1.1fr 1fr;
-  gap: 60px;
-  align-items: center;
-  margin: 0 0 42px;
-}
-.symmetry-story h3 {
-  font-size: 39px;
-  margin: 21px 0;
-}
-.symmetry-story > p {
-  font-size: 15px;
-  color: var(--tone-afbed1);
-  line-height: 1.85;
-}
-.symmetry-story > a {
-  font-size: 12px;
-  color: var(--tone-90b4dc);
-  display: inline-flex;
-  gap: 12px;
-  align-items: center;
-  margin-top: 10px;
-}
-.symmetry-art {
-  margin: 0;
-  align-self: center;
-}
-.symmetry-art img {
-  width: 100%;
-  height: auto;
-  border-radius: 4px;
-}
-.symmetry-art figcaption {
-  font-size: 12px;
-  line-height: 1.7;
-  color: var(--tone-859cb6);
-  margin-top: 15px;
-}
-.mathematician-gallery {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 25px;
-  margin-top: 45px;
-}
-.mathematician-gallery > a {
-  background: var(--tone-131e2b);
-  border: 1px solid var(--tone-2b3d52);
-  border-radius: 4px;
-  overflow: hidden;
-  transition:
-    border-color 0.25s,
-    transform 0.25s;
-}
-.mathematician-gallery > a:hover {
-  transform: translateY(-4px);
-  border-color: var(--tone-86a5c7);
-}
-.mathematician-gallery img {
-  width: 100%;
-  height: 290px;
-  object-fit: cover;
-  object-position: center 32%;
-}
-.mathematician-gallery > a > div {
-  padding: 21px 23px;
-}
-.mathematician-gallery span {
-  font:
-    12px var(--font-geist-mono),
-    monospace;
-  color: var(--orange);
-}
-.mathematician-gallery h4 {
-  font-size: 24px;
-  margin: 12px 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-}
-.mathematician-gallery h4 svg {
-  color: var(--tone-7899bd);
-}
-.mathematician-gallery p {
-  font-size: 13px;
-  line-height: 1.65;
-  color: var(--tone-99adc4);
-  margin: 0;
-}
-.mathematician-gallery + .source-note {
-  margin-bottom: 60px;
 }
 .equation-film {
   margin-top: 65px;
@@ -674,29 +477,8 @@
     font-size: 12px;
     max-width: 140px;
   }
-  .wu-portrait img {
-    height: 450px;
-  }
-  .symmetry-prelude {
-    gap: 35px;
-  }
-  .symmetry-story h3 {
-    font-size: 34px;
-  }
-  .symmetry-story > p {
-    font-size: 14px;
-  }
-  .mathematician-gallery img {
-    height: 260px;
-  }
-  .mathematician-gallery h4 {
-    font-size: 22px;
-  }
   .three-canvas {
     height: 390px;
-  }
-  .wu-experiment {
-    gap: 35px;
   }
 }
 @media (max-width: 900px) {
@@ -726,49 +508,6 @@
     padding: 15px 12px;
   }
   .collapse-heading {
-    font-size: 12px;
-  }
-  .wu-portrait img {
-    height: 365px;
-  }
-  .symmetry-prelude {
-    grid-template-columns: 1fr;
-  }
-  .symmetry-art {
-    max-width: 620px;
-  }
-  .symmetry-story h3 {
-    font-size: 36px;
-  }
-  .symmetry-story > p {
-    font-size: 15px;
-  }
-  .mathematician-gallery {
-    gap: 16px;
-  }
-  .mathematician-gallery img {
-    height: 215px;
-  }
-  .mathematician-gallery > a > div {
-    padding: 18px;
-  }
-  .mathematician-gallery h4 {
-    font-size: 20px;
-  }
-  .mathematician-gallery p {
-    font-size: 12px;
-  }
-  .wu-experiment {
-    gap: 25px;
-    grid-template-columns: 1fr 1fr;
-  }
-  .wu-experiment h3 {
-    font-size: 31px;
-  }
-  .wu-experiment p {
-    font-size: 13px;
-  }
-  .wu-experiment label {
     font-size: 12px;
   }
   .film-heading h3 {
@@ -882,86 +621,6 @@
   .option-sub {
     font-size: 12px;
   }
-  .timeline-portraits {
-    margin: 17px 0;
-  }
-  .timeline-portraits figcaption {
-    font-size: 12px;
-  }
-  .wu-portrait img {
-    height: 460px;
-    object-position: center 38%;
-  }
-  .wu-experiment {
-    grid-template-columns: 1fr;
-    padding: 32px 0;
-    margin: 15px 0 65px;
-    gap: 15px;
-  }
-  .wu-experiment h3 {
-    font-size: 32px;
-  }
-  .wu-experiment p {
-    font-size: 14px;
-  }
-  .wu-experiment label {
-    font-size: 12px;
-  }
-  .wu-experiment small {
-    font-size: 12px;
-  }
-  .wu-diagram svg {
-    max-height: 310px;
-  }
-  .symmetry-prelude {
-    gap: 30px;
-    margin-bottom: 30px;
-  }
-  .symmetry-story .eyebrow {
-    font-size: 12px;
-    line-height: 1.7;
-    display: block;
-  }
-  .symmetry-story h3 {
-    font-size: 32px;
-    margin: 20px 0;
-  }
-  .symmetry-story > p {
-    font-size: 14px;
-  }
-  .symmetry-art figcaption {
-    font-size: 12px;
-  }
-  .mathematician-gallery {
-    grid-template-columns: 1fr;
-    gap: 14px;
-    margin-top: 30px;
-  }
-  .mathematician-gallery > a {
-    display: grid;
-    grid-template-columns: 38% 1fr;
-  }
-  .mathematician-gallery img {
-    height: 100%;
-    min-height: 175px;
-    object-position: 50% 30%;
-  }
-  .mathematician-gallery > a > div {
-    padding: 22px 20px;
-  }
-  .mathematician-gallery h4 {
-    font-size: 23px;
-    margin: 12px 0;
-  }
-  .mathematician-gallery p {
-    font-size: 12px;
-  }
-  .mathematician-gallery span {
-    font-size: 12px;
-  }
-  .mathematician-gallery + .source-note {
-    margin-bottom: 45px;
-  }
   .plain-result {
     font-size: 14px;
   }
@@ -1046,9 +705,7 @@
   .collapse-instrument * {
     transition: none !important;
   }
-  .root-diagram circle,
-  .root-network line,
-  .spectrum-map > div {
+  .root-diagram circle {
     transition: none !important;
   }
 }

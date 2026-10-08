@@ -1,0 +1,4 @@
+{
+  "name": "GUM website",
+  "install": "cd gum-website && npm ci"
+}

@@ -21,6 +21,9 @@ import {
   soundSpeed,
 } from '@/lib/primer-physics';
 
+/** Server and browser can disagree in the last bit of trigonometry; drawn coordinates must not. */
+const round = (value: number) => Math.round(value * 1000) / 1000;
+
 /** 1.2: the swimmer in the river, Michelson and Morley's race in miniature. */
 export function RiverRace() {
   const [swim, setSwim] = useState(5);
@@ -1022,10 +1025,10 @@ export function Foucault() {
             {Array.from({ length: 24 }, (_, i) => (
               <line
                 key={i}
-                x1={300 + 104 * Math.cos((i * Math.PI) / 12)}
-                y1={130 + 104 * Math.sin((i * Math.PI) / 12)}
-                x2={300 + 110 * Math.cos((i * Math.PI) / 12)}
-                y2={130 + 110 * Math.sin((i * Math.PI) / 12)}
+                x1={round(300 + 104 * Math.cos((i * Math.PI) / 12))}
+                y1={round(130 + 104 * Math.sin((i * Math.PI) / 12))}
+                x2={round(300 + 110 * Math.cos((i * Math.PI) / 12))}
+                y2={round(130 + 110 * Math.sin((i * Math.PI) / 12))}
                 stroke="#5f7fa3"
               />
             ))}

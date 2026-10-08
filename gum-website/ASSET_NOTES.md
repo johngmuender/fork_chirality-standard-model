@@ -1,6 +1,6 @@
 # Illustration and film notes
 
-The GUM edition ships no raster artwork and no video file. Its plates and its films are drawn in code from the same palette as the chirality essay: midnight navy, faded blue, copper and ivory, with an engraved-ink texture.
+The GUM edition ships no raster artwork and no video file. Its plates and its films are drawn in code from one palette: midnight navy, faded blue, copper and ivory, with an engraved-ink texture.
 
 ## Historical plates
 

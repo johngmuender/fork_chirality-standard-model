@@ -510,7 +510,7 @@ export function BeltTrick() {
           {segments.map((i) => {
             const u = i / segments.length;
             const angle = (twist * Math.PI * u) / 180;
-            const w = 26 * Math.cos(angle);
+            const w = round(26 * Math.cos(angle));
             const front = Math.cos(angle) >= 0;
             return (
               <rect
@@ -529,8 +529,8 @@ export function BeltTrick() {
             <line
               x1="0"
               y1="0"
-              x2={36 * Math.cos((twist * Math.PI) / 360)}
-              y2={-36 * Math.sin((twist * Math.PI) / 360)}
+              x2={round(36 * Math.cos((twist * Math.PI) / 360))}
+              y2={round(-36 * Math.sin((twist * Math.PI) / 360))}
               stroke="#f4d592"
               strokeWidth="3"
             />

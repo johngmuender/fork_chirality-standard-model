@@ -1,0 +1,7 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "installCommand": "cd gum-website && npm ci",
+  "buildCommand": "cd gum-website && npm run build",
+  "outputDirectory": "gum-website/dist/client"
+}

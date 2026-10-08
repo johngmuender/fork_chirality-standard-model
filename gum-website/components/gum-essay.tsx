@@ -832,8 +832,8 @@ function EssayContent({ initialPath }: { initialPath: PathId }) {
                     branch.
                   </h3>
                   <p>
-                    The draft, this edition and the chirality essay it borrows
-                    its form from live in one repository with their checks.
+                    The draft, the primer and this edition live in one
+                    repository with their checks.
                   </p>
                   <span className="resource-action">
                     Explore on GitHub <ArrowUpRight size={19} />
