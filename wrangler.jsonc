@@ -1,0 +1,11 @@
+// Cloudflare Workers static assets: the export, served from the root of the
+// Worker's domain. Workers Builds does not run a build step from this file;
+// set its build command to: cd gum-website && npm ci && npm run build
+{
+  "name": "gumai-website-intro-v5-1",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    "directory": "./gum-website/dist/client",
+    "not_found_handling": "404-page"
+  }
+}
