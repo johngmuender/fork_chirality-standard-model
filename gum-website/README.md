@@ -13,18 +13,19 @@ npm ci
 npm run dev
 ```
 
-The startup task copies the current draft and primer from their canonical locations in the parent repository into `public/`, records their SHA-256 in a manifest, and compiles the primer’s Markdown into `lib/primer-content.ts`, the typed module the primer path renders. [Illustration and film notes](ASSET_NOTES.md) explain how the plates and the films are made.
+The startup task copies the current draft and primer from `gum/` at the repository root into `public/`, records their SHA-256 in a manifest, and compiles the primer’s Markdown into `lib/primer-content.ts`, the typed module the primer path renders. [Illustration and film notes](ASSET_NOTES.md) explain how the plates and the films are made.
 
 ## Check and publish
 
 ```sh
-npm run sync:assets
 npm run check
-npm run build:pages
-node scripts/check-pages.mjs
+npm run typecheck
+npm run lint
+npm run build
+npm run check:export
 ```
 
-GitHub Pages serves the static export under the repository name, `/fork_chirality-standard-model/` by default. Set `PAGES_BASE_PATH` and `SITE_ORIGIN` to publish a fork under another name. [The publishing workflow](../.github/workflows/gum-pages.yml) runs these checks and deploys that export when started by hand; the repository’s default Pages workflow still publishes the chirality essay on every push to `main`, so a repository chooses which site its project page serves.
+`npm run build` copies the draft and the primer again and writes the static export to `dist/client`. Two build variables, read in `site-address.mjs`, say where the export will be served: `BASE_PATH`, the URL prefix (`/gumai-website-intro-v5-1` on the GitHub project page, empty at the root of a domain), and `SITE_ORIGIN`, the scheme and host the canonical link names. On Vercel the origin defaults to the production domain; elsewhere, without `SITE_ORIGIN`, the page leaves its canonical link out. Run `npm run check:export` with the same variables: it reads the export from `dist/client` under the base path, the directory a host publishes. [Publishing](../README.md#publish) covers GitHub Pages, Vercel and Cloudflare.
 
 The download manifest records both sources’ SHA-256 and is checked against the files. The compiled primer module is checked against a fresh parse of the Markdown.
 
@@ -44,7 +45,7 @@ Exhibits move gently only while visible. Interaction or keyboard focus pauses au
 - The ledger census: thirty stakes, twenty-six closures, sixteen audited claims, fifteen corrections, two errata, seven cross-locks, and every glossary term in use.
 - The primer: the compiled module matches its Markdown; sixteen chapters in eight parts with every box, problem set and table; every exhibit slot anchored and registered; and the primer’s own answer-key notes recomputed from the exhibits’ functions.
 - React component tests for route changes, focus, timers, reduced motion, the films, the primer’s rendering and graphics failures; and for the reading journey: the hero, the chooser, the course and route maps, chapter ends, the reading bar, the contents drawer and the reading memory.
-- Download identity, Pages asset paths, and the static HTML of the primer-first page with its chapter text.
+- Download identity, base-path asset paths for the page and its not-found page, the canonical link, and the static HTML of the primer-first page with its chapter text.
 
 These are presentation and consistency tests. They recompute the draft’s and the primer’s closed-form arithmetic; they do not evaluate the profile and frustration integrals the draft marks [N], do not run its normalisation audit K-N, and do not adjudicate any stake.
 

@@ -3,21 +3,31 @@ import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { createHash } from 'node:crypto';
 import { JSDOM } from 'jsdom';
+import { basePath, siteOrigin } from '../site-address.mjs';
 
-// The same environment that configured the build names the project page.
-const basePath =
-  process.env.PAGES_BASE_PATH ?? '/fork_chirality-standard-model';
-const origin = process.env.SITE_ORIGIN ?? 'https://johngmuender.github.io';
+// Run with the environment that configured the build: the directory a host
+// publishes is dist/client under the base path.
 const base = basePath + '/';
 const output = resolve('dist/client' + basePath);
-const html = readFileSync(resolve(output, 'index.html'), 'utf8');
-const doc = new JSDOM(html).window.document;
+const read = (page) =>
+  new JSDOM(readFileSync(resolve(output, page), 'utf8')).window.document;
+const doc = read('index.html');
 assert.match(doc.title, /What Keeps the Books\? The GUM Material Primer/);
 assert.match(
   doc.querySelector('meta[name=description]').content,
   /What Material Could Possess Quantum Mechanics as Its Coarse-Grained Bookkeeping/,
 );
-assert.equal(doc.querySelector('link[rel=canonical]').href, origin + base);
+if (siteOrigin)
+  assert.equal(
+    doc.querySelector('link[rel=canonical]')?.href,
+    siteOrigin + base,
+  );
+else
+  assert.equal(
+    doc.querySelector('link[rel=canonical]'),
+    null,
+    'A canonical link without a known origin',
+  );
 // The primer is the prerendered way in: the hero opens on its letter, the
 // chooser features it beside the paper's four routes, and its course is laid
 // out before the first chapter. No reader's memory is assumed.
@@ -108,18 +118,22 @@ assert.match(
 );
 assert.equal(doc.querySelectorAll('.path-finale-routes button').length, 4);
 assert.equal(doc.querySelectorAll('.plate-card').length, 11);
+// Hosts serve 404.html from the published directory for unknown paths, so
+// the not-found page has to sit beside index.html and share its prefix.
 let references = 0;
-for (const element of doc.querySelectorAll('[src],[href],[poster]')) {
-  for (const attr of ['src', 'href', 'poster']) {
-    const url = element.getAttribute(attr);
-    if (!url || /^(?:https?:|data:|mailto:|#)/.test(url)) continue;
-    assert(url.startsWith(base), 'Missing Pages prefix: ' + url);
-    const path = decodeURIComponent(url.slice(base.length).split(/[?#]/)[0]);
-    assert(
-      existsSync(resolve(output, path || 'index.html')),
-      'Missing published file: ' + url,
-    );
-    references++;
+for (const page of [doc, read('404.html')]) {
+  for (const element of page.querySelectorAll('[src],[href],[poster]')) {
+    for (const attr of ['src', 'href', 'poster']) {
+      const url = element.getAttribute(attr);
+      if (!url || /^(?:https?:|data:|mailto:|#)/.test(url)) continue;
+      assert(url.startsWith(base), 'Missing base-path prefix: ' + url);
+      const path = decodeURIComponent(url.slice(base.length).split(/[?#]/)[0]);
+      assert(
+        existsSync(resolve(output, path || 'index.html')),
+        'Missing published file: ' + url,
+      );
+      references++;
+    }
   }
 }
 const manifest = JSON.parse(
@@ -164,5 +178,5 @@ for (const path of files.filter((path) => path.endsWith('.css'))) {
   }
 }
 console.log(
-  `PASS: static Pages export at ${base}; ${references} local references; ${manifest.files.length} byte-identical download; ${files.length} public files; metadata and current chapter text.`,
+  `PASS: static export for ${siteOrigin || '(no canonical origin)'}${base}; ${references} local references across index.html and 404.html; ${manifest.files.length} byte-identical downloads; ${files.length} public files; metadata and current chapter text.`,
 );

@@ -1,12 +1,7 @@
 import tailwindcss from '@tailwindcss/postcss';
 import vinext from 'vinext';
 import { defineConfig } from 'vite';
-
-const staticPages = process.env.GITHUB_PAGES === 'true';
-const basePath = staticPages
-  ? (process.env.PAGES_BASE_PATH ?? '/fork_chirality-standard-model')
-  : '';
-const siteOrigin = process.env.SITE_ORIGIN ?? 'https://johngmuender.github.io';
+import { basePath, siteOrigin } from './site-address.mjs';
 
 export default defineConfig({
   define: {
