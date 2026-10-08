@@ -7,6 +7,7 @@ import './themes.css';
 import './reader-experience.css';
 import './foundations.css';
 import './gum.css';
+import './journey.css';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',

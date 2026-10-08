@@ -7,6 +7,7 @@ const cssFiles = [
   'reader-experience',
   'foundations',
   'gum',
+  'journey',
 ];
 const tokens = new Set();
 for (const name of cssFiles) {

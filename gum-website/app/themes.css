@@ -4,6 +4,7 @@
   --tone-000000: #000000;
   --tone-00000055: #00000055;
   --tone-080b10: #080b10;
+  --tone-080b10a6: #080b10a6;
   --tone-080b10e8: #080b10e8;
   --tone-080b10f0: #080b10f0;
   --tone-080b10f7: #080b10f7;
@@ -45,7 +46,6 @@
   --tone-182434: #182434;
   --tone-182b43: #182b43;
   --tone-19283a: #19283a;
-  --tone-193047: #193047;
   --tone-19345280: #19345280;
   --tone-1a304d: #1a304d;
   --tone-1d2b3c: #1d2b3c;
@@ -110,14 +110,12 @@
   --tone-56616a: #56616a;
   --tone-577fa8: #577fa8;
   --tone-58789b: #58789b;
-  --tone-607087: #607087;
   --tone-607f9e: #607f9e;
   --tone-627c98: #627c98;
   --tone-667d95: #667d95;
   --tone-667e98: #667e98;
   --tone-66809e: #66809e;
   --tone-6688af: #6688af;
-  --tone-668daf: #668daf;
   --tone-688099: #688099;
   --tone-688198: #688198;
   --tone-69829f: #69829f;
@@ -132,7 +130,6 @@
   --tone-788695: #788695;
   --tone-789994: #789994;
   --tone-7899bd: #7899bd;
-  --tone-789bbc: #789bbc;
   --tone-7c92ad: #7c92ad;
   --tone-7c9ab7: #7c9ab7;
   --tone-7d9ebf: #7d9ebf;
@@ -168,7 +165,6 @@
   --tone-8bbdaf: #8bbdaf;
   --tone-8c9fb6: #8c9fb6;
   --tone-8ca6c0: #8ca6c0;
-  --tone-8cabc9: #8cabc9;
   --tone-8cbdb3: #8cbdb3;
   --tone-8da7c4: #8da7c4;
   --tone-8e9fb1: #8e9fb1;
@@ -176,7 +172,6 @@
   --tone-8ea8c2: #8ea8c2;
   --tone-8eabc9: #8eabc9;
   --tone-8eaecd: #8eaecd;
-  --tone-8f9dab: #8f9dab;
   --tone-8fa9c4: #8fa9c4;
   --tone-8fa9c6: #8fa9c6;
   --tone-8fb1d7: #8fb1d7;
@@ -199,7 +194,6 @@
   --tone-99afc8: #99afc8;
   --tone-9aadc3: #9aadc3;
   --tone-9acbb9: #9acbb9;
-  --tone-9bb0c9: #9bb0c9;
   --tone-9bc8ff: #9bc8ff;
   --tone-9cabbc: #9cabbc;
   --tone-9cacc0: #9cacc0;
@@ -237,7 +231,6 @@
   --tone-ab99a0: #ab99a0;
   --tone-acb7c3: #acb7c3;
   --tone-acbdd0: #acbdd0;
-  --tone-acc7e5: #acc7e5;
   --tone-adc2d9: #adc2d9;
   --tone-aec2bf: #aec2bf;
   --tone-afbed1: #afbed1;
@@ -266,7 +259,6 @@
   --tone-cbd4de: #cbd4de;
   --tone-cbd6e2: #cbd6e2;
   --tone-ccb2ef: #ccb2ef;
-  --tone-d1e1f4: #d1e1f4;
   --tone-d2e0ef: #d2e0ef;
   --tone-d3e4f7: #d3e4f7;
   --tone-d5bb86: #d5bb86;
@@ -280,10 +272,11 @@
   --tone-e7c795: #e7c795;
   --tone-e8e5dd: #e8e5dd;
   --tone-ecd199: #ecd199;
+  --tone-ecd19926: #ecd19926;
+  --tone-ecd19966: #ecd19966;
   --tone-eda18c: #eda18c;
   --tone-eecba0: #eecba0;
   --tone-eef4fc: #eef4fc;
-  --tone-f0be96: #f0be96;
   --tone-f0f2f3: #f0f2f3;
   --tone-f0f4f8: #f0f4f8;
   --tone-f1a17d: #f1a17d;

@@ -462,52 +462,6 @@ h4 {
     transform: rotate(360deg);
   }
 }
-.chapter-nav {
-  position: sticky;
-  top: 0;
-  z-index: 30;
-  display: flex;
-  align-items: center;
-  gap: 32px;
-  padding: 0 max(5.2%, calc((100vw - 1435px) /2));
-  height: 64px;
-  background: var(--tone-080b10f0);
-  backdrop-filter: blur(18px);
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-}
-.chapter-nav a {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  white-space: nowrap;
-  font-size: 13px;
-  height: 100%;
-  border-bottom: 2px solid transparent;
-  color: var(--tone-8f9dab);
-  transition:
-    color 0.2s,
-    border-color 0.2s;
-}
-.chapter-nav a > span {
-  font:
-    12px var(--font-geist-mono),
-    monospace;
-  color: var(--tone-607087);
-}
-.chapter-nav a.active {
-  color: var(--foreground);
-  border-color: var(--primary);
-}
-.chapter-nav a.active > span {
-  color: var(--primary);
-}
-.chapter-nav a:hover {
-  color: var(--primary);
-}
-.chapter-nav .chapter-pdf {
-  margin-left: auto;
-}
 .section-number {
   display: flex;
   align-items: center;
@@ -1859,23 +1813,12 @@ h4 {
 .site-footer a:hover {
   color: var(--primary);
 }
-@media (min-width: 1600px) {
-  .chapter-nav {
-    justify-content: center;
-  }
-  .chapter-nav .chapter-pdf {
-    margin-left: 60px;
-  }
-}
 @media (max-width: 1100px) {
   .hero-content {
     min-height: 590px;
   }
   h1 {
     font-size: clamp(44px, 5.3vw, 58px);
-  }
-  .chapter-nav {
-    gap: 20px;
   }
   .section-heading {
     gap: 40px;
@@ -1957,21 +1900,6 @@ h4 {
   }
   .masthead nav > .repository-link {
     display: none;
-  }
-  .chapter-nav {
-    gap: 25px;
-    overflow-x: auto;
-    padding: 0 6%;
-    scrollbar-width: none;
-  }
-  .chapter-nav::-webkit-scrollbar {
-    display: none;
-  }
-  .chapter-nav .chapter-pdf {
-    display: none;
-  }
-  .chapter-nav a {
-    font-size: 12px;
   }
   .section-heading {
     grid-template-columns: 1fr;
@@ -2250,16 +2178,6 @@ h4 {
     font-size: 12px;
   }
   .hero-footer {
-    font-size: 12px;
-  }
-  .chapter-nav {
-    gap: 24px;
-    height: 56px;
-  }
-  .chapter-nav a {
-    font-size: 12px;
-  }
-  .chapter-nav a > span {
     font-size: 12px;
   }
   .section {

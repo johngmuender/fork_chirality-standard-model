@@ -16,6 +16,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
+import { useMotion } from '@/components/exhibit-motion';
 import {
   DepthControl,
   chapterKicker,
@@ -200,6 +201,7 @@ function ContentsDrawer({
   path: ReaderPath;
   current: ChapterId;
 }) {
+  const { enabled: motionEnabled } = useMotion();
   const [open, setOpen] = useState(false);
   const [forgotten, setForgotten] = useState(false);
   // Navigation waits until the drawer has closed, so its focus return and
@@ -254,7 +256,8 @@ function ContentsDrawer({
       </SheetTrigger>
       <SheetContent
         side="left"
-        className="contents-drawer"
+        className={'contents-drawer' + (motionEnabled ? '' : ' is-still')}
+        data-edition={path.edition}
         finalFocus={() => !pending.current}
       >
         <SheetHeader className="contents-head">
