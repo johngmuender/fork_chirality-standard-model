@@ -19,6 +19,9 @@ import { capacityFloor, haarFidelityBound } from '@/lib/gum-quantum';
 import { haloLength } from '@/lib/gum-particle';
 import { electronMassEv, muonMassEv, tauMassEv } from '@/lib/gum-constants';
 
+/** Server and browser can disagree in the last bit of trigonometry; drawn coordinates must not. */
+const round = (value: number) => Math.round(value * 1000) / 1000;
+
 /** 7.1–7.2: the quantum potential of a packet, and the penalty for squeezing it. */
 export function Madelung() {
   const [sigma, setSigma] = useState(1);
@@ -322,16 +325,16 @@ export function HairyBall() {
             </title>
             <circle cx="200" cy="200" r="170" fill="#0f1824" stroke="#365271" />
             {points.map((p, i) => {
-              const sx = 200 + 170 * p.x,
-                sy = 200 - 170 * p.y;
+              const sx = round(200 + 170 * p.x),
+                sy = round(200 - 170 * p.y);
               const len = 14 * p.mag;
               return (
-                <g key={i} opacity={0.35 + 0.65 * p.depth}>
+                <g key={i} opacity={round(0.35 + 0.65 * p.depth)}>
                   <line
                     x1={sx}
                     y1={sy}
-                    x2={sx + len * p.vx}
-                    y2={sy - len * p.vy}
+                    x2={round(sx + len * p.vx)}
+                    y2={round(sy - len * p.vy)}
                     stroke={p.mag < 0.25 ? '#f4d592' : '#8bbcff'}
                     strokeWidth={p.mag < 0.25 ? 2.5 : 1.5}
                   />
