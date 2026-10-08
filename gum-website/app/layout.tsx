@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
+import { asset } from '@/lib/assets';
 import './globals.css';
 import './exhibits.css';
 import './physics.css';
@@ -32,6 +33,7 @@ export const metadata: Metadata = {
     'The GUM Material Primer as an interactive edition: sixteen chapters that teach the GUM program from the ground up, each ending where the working draft, “What Material Could Possess Quantum Mechanics as Its Coarse-Grained Bookkeeping?”, takes it further: a material with positions and orientations, light as its locked wave, a knot as a particle, a tower of fields as the wave function, and thirty stakes with printed kills.',
   metadataBase: new URL(canonical),
   alternates: { canonical },
+  icons: { icon: { url: asset('favicon.svg'), type: 'image/svg+xml' } },
 };
 
 export default function RootLayout({
