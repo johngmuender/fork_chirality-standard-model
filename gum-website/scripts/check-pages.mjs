@@ -12,36 +12,62 @@ const base = basePath + '/';
 const output = resolve('dist/client' + basePath);
 const html = readFileSync(resolve(output, 'index.html'), 'utf8');
 const doc = new JSDOM(html).window.document;
-assert.match(doc.title, /What Material Could Possess Quantum Mechanics/);
+assert.match(doc.title, /What Keeps the Books\? The GUM Material Primer/);
+assert.match(
+  doc.querySelector('meta[name=description]').content,
+  /What Material Could Possess Quantum Mechanics as Its Coarse-Grained Bookkeeping/,
+);
 assert.equal(doc.querySelector('link[rel=canonical]').href, origin + base);
-assert.match(doc.body.textContent, /inverse act/);
+// The primer is the prerendered way in: the hero opens on its letter, the
+// chooser features it beside the paper's four routes, and its course is laid
+// out before the first chapter. No reader's memory is assumed.
 assert.match(
-  doc.querySelector('#audit-step-0').textContent,
-  /four levels of description/,
+  doc.querySelector('#beginning').textContent,
+  /Begin with the letter/,
 );
+assert.doesNotMatch(doc.body.textContent, /CONTINUE WHERE YOU LEFT OFF/);
+assert.equal(
+  doc.querySelectorAll('.primer-choice[aria-pressed=true]').length,
+  1,
+  'the primer, chosen',
+);
+assert.equal(doc.querySelectorAll('.route-choice').length, 4, 'paper routes');
 assert.match(
-  doc.querySelector('#question').textContent,
-  /What material could possess quantum mechanics/,
+  doc.querySelector('#paper-routes').textContent,
+  /inverse umdeutung/i,
 );
-assert.match(doc.querySelector('#material').textContent, /cone condition/);
-assert.match(doc.querySelector('#ledger').textContent, /THIRTY STAKES/);
-// The curious route is prerendered; its chapters appear exactly once and the
-// background chapters wait behind the fold, unmounted.
+assert.equal(
+  doc.querySelectorAll('.course-map li').length,
+  10,
+  'front matter, eight parts, back matter',
+);
+assert.equal(doc.querySelector('.reading-bar').dataset.edition, 'primer');
+assert.equal(
+  doc.querySelector('.skip-link').getAttribute('href'),
+  '#primer-intro',
+);
+// The primer's chapters appear exactly once and in order, each closing with
+// the way on; the paper's thirteen wait behind the fold, unmounted.
+const primerOrder = [
+  'primer-intro',
+  ...Array.from({ length: 16 }, (_, i) => 'primer-' + (i + 1)),
+  'primer-end',
+];
+assert.deepEqual(
+  [...doc.querySelectorAll('.path-flow > .path-chapter')].map(
+    (n) => n.dataset.chapter,
+  ),
+  primerOrder,
+);
 for (const id of [
-  'question',
-  'core',
-  'material',
-  'light',
-  'particle',
-  'quantum',
-  'vacuum',
-  'cosmos',
-  'handedness',
-  'ledger',
-  'verify',
-  'glossary',
-  'local-checks',
-  'stakes',
+  ...primerOrder,
+  'primer-letter',
+  'primer-film',
+  'primer-ladder',
+  'primer-knot',
+  'primer-stakes',
+  'path-opening',
+  'path-finale',
 ]) {
   assert.equal(
     doc.querySelectorAll('#' + id).length,
@@ -49,26 +75,39 @@ for (const id of [
     'Missing or duplicate section: ' + id,
   );
 }
-for (const id of ['electron', 'sectors'])
-  assert.equal(
-    doc.querySelectorAll('#' + id).length,
-    0,
-    'Folded chapter mounted: ' + id,
-  );
-assert.match(doc.body.textContent, /The background is still here/);
-assert.match(doc.body.textContent, /Teach me from the ground up/);
-assert.equal(
-  doc.querySelectorAll('.primer-choice').length,
-  1,
-  'the fifth path',
+assert.equal(doc.querySelectorAll('.part-opener').length, 8);
+assert.equal(doc.querySelectorAll('.chapter-end').length, primerOrder.length);
+assert.match(doc.querySelector('#primer-intro').textContent, /Dear reader,/);
+assert.match(
+  doc.querySelector('#primer-end').textContent,
+  /Standing by for adjudication/,
 );
-for (const id of ['primer-intro', 'primer-1', 'primer-16'])
+for (const id of [
+  'question',
+  'core',
+  'material',
+  'light',
+  'vacuum',
+  'quantum',
+  'particle',
+  'electron',
+  'sectors',
+  'cosmos',
+  'handedness',
+  'ledger',
+  'verify',
+])
   assert.equal(
     doc.querySelectorAll('#' + id).length,
     0,
-    'Primer chapter mounted on the curious route: ' + id,
+    'Folded paper chapter mounted: ' + id,
   );
-assert.equal(doc.querySelectorAll('.plate-card').length, 6);
+assert.match(
+  doc.querySelector('.path-foreign').textContent,
+  /The paper’s instruments are one link away/,
+);
+assert.equal(doc.querySelectorAll('.path-finale-routes button').length, 4);
+assert.equal(doc.querySelectorAll('.plate-card').length, 11);
 let references = 0;
 for (const element of doc.querySelectorAll('[src],[href],[poster]')) {
   for (const attr of ['src', 'href', 'poster']) {
