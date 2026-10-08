@@ -36,7 +36,11 @@ export function parseMemory(raw: string | null): ReadingMemory {
       : [];
     let kept: ReadingPlace | null = null;
     if (place && typeof place === 'object') {
-      const p = place as { path?: unknown; chapter?: unknown; anchor?: unknown };
+      const p = place as {
+        path?: unknown;
+        chapter?: unknown;
+        anchor?: unknown;
+      };
       if (isPathId(p.path) && isChapter(p.chapter))
         kept = {
           path: p.path,
@@ -92,6 +96,51 @@ export function withPlace(
     old.anchor === place.anchor
     ? memory
     : { ...memory, place };
+}
+
+/**
+ * The memory as an external store for useSyncExternalStore. The snapshot is
+ * re-read from storage so another tab's progress shows up, and is cached by its
+ * raw text so an unchanged memory keeps its identity. When storage is
+ * unavailable the memory still lasts for the visit.
+ */
+const listeners = new Set<() => void>();
+let cachedRaw: string | null = null;
+let cached: ReadingMemory = emptyMemory;
+function readRaw(): string | null {
+  try {
+    return localStorage.getItem(memoryKey);
+  } catch {
+    return cachedRaw;
+  }
+}
+export function memorySnapshot(): ReadingMemory {
+  const raw = readRaw();
+  if (raw !== cachedRaw) {
+    cachedRaw = raw;
+    cached = parseMemory(raw);
+  }
+  return cached;
+}
+export function subscribeMemory(listener: () => void) {
+  listeners.add(listener);
+  const storage = (event: StorageEvent) => {
+    if (event.key === memoryKey || event.key === null) listener();
+  };
+  window.addEventListener('storage', storage);
+  return () => {
+    listeners.delete(listener);
+    window.removeEventListener('storage', storage);
+  };
+}
+export function updateMemory(change: (memory: ReadingMemory) => ReadingMemory) {
+  const old = memorySnapshot();
+  const next = change(old);
+  if (next === old) return;
+  saveMemory(next);
+  cachedRaw = readRaw();
+  cached = next;
+  listeners.forEach((listener) => listener());
 }
 
 /** A saved place is worth offering only once the reader is past the path's opening. */

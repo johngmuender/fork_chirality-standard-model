@@ -20,6 +20,7 @@ import {
 } from '@/components/primer-text';
 import { primerExhibitComponents } from '@/components/primer-exhibits';
 import { PrimerFilm } from '@/components/primer-film';
+import { PartOpener } from '@/components/path-guide';
 import { repository, snapshot } from '@/lib/gum-site';
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
@@ -92,9 +93,13 @@ export function PrimerChapterSection({
   const seen: TermMemory = new Set();
   return (
     <section className="section primer-chapter" id={chapter.slug}>
-      <SectionLabel>
-        PART {part.numeral} · {part.title}
-      </SectionLabel>
+      {part.chapters[0] === chapter.number ? (
+        <PartOpener part={part} />
+      ) : (
+        <SectionLabel>
+          PART {part.numeral} · {part.title}
+        </SectionLabel>
+      )}
       <div className="section-heading">
         <h2>
           <span className="primer-chapter-number">

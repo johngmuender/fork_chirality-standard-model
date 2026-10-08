@@ -8,6 +8,7 @@ import {
 } from '@/components/primer-chapter';
 import { Inline } from '@/components/primer-text';
 import { primer, primerChapter } from '@/lib/primer';
+import { chapterInfo } from '@/lib/reader-paths';
 
 const settle = async () => {
   await act(async () => {
@@ -55,9 +56,18 @@ it('renders a chapter nearly verbatim, folding the problems on the story track',
   );
   await settle();
   expect(view.container.querySelector('#primer-2')).toBeTruthy();
-  expect(screen.getByRole('heading', { level: 2 }).textContent).toContain(
-    'Chapter 2',
-  );
+  const [part, title] = screen.getAllByRole('heading', { level: 2 });
+  expect(part.textContent).toBe('Part II: The material, level one');
+  expect(title.textContent).toContain('Chapter 2');
+  expect(
+    [...view.container.querySelectorAll('.part-chapters li')].map(
+      (li) => li.textContent,
+    ),
+  ).toEqual([
+    expect.stringContaining('begins below'),
+    expect.stringContaining(chapterInfo['primer-3'].title),
+  ]);
+  expect(view.container.querySelector('a[href="#primer-3"]')).toBeTruthy();
   const sections = [
     ...view.container.querySelectorAll('h3.primer-section-title'),
   ];
