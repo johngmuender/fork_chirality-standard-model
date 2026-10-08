@@ -180,17 +180,23 @@ function JourneyProvider({
   );
 
   useEffect(() => {
+    // The finale counts as the end of the path's last chapter, so a reader
+    // who jumps straight to it is placed there.
+    const last = resolvePath(pathId).chapters.at(-1)!;
     const observer = new IntersectionObserver(
       (entries) =>
         entries.forEach((entry) => {
           if (entry.isIntersecting)
-            setActive({ path: pathId, id: entry.target.id });
+            setActive({
+              path: pathId,
+              id: entry.target.id === 'path-finale' ? last : entry.target.id,
+            });
         }),
       { rootMargin: '-15% 0px -65% 0px' },
     );
     const observed = new Map<string, HTMLElement>();
     const watchChapters = () => {
-      Object.keys(chapterInfo).forEach((id) => {
+      [...Object.keys(chapterInfo), 'path-finale'].forEach((id) => {
         const element = document.getElementById(id);
         const previous = observed.get(id);
         if (element === previous) return;
