@@ -5,15 +5,26 @@ import {
   chapterInfo,
   chapterIds,
   chapterForAnchor,
+  companionChapters,
   decodeAnchor,
+  defaultPath,
   editionOf,
   foreignChapters,
   nestedChapters,
   omittedChapters,
+  primerPartIntroductions,
   resolvePath,
 } from '../lib/reader-paths.ts';
 import { motionAllowed } from '../lib/motion-policy.ts';
-import { primer, primerChapterIds } from '../lib/primer.ts';
+import {
+  paperSectionsFor,
+  primer,
+  primerChapterIds,
+  primerChapters,
+  primerExhibitSlots,
+  primerStats,
+  primerTotals,
+} from '../lib/primer.ts';
 
 const chapters = [...chapterIds].sort();
 assert.equal(
@@ -98,8 +109,10 @@ assert.equal(resolvePath('physics').chapters[0], 'material');
 assert.equal(resolvePath('experiments').chapters[0], 'core');
 assert.equal(resolvePath('review').chapters[0], 'verify');
 assert.equal(resolvePath('primer').chapters[0], 'primer-intro');
-assert.equal(resolvePath('invalid').id, 'curious');
-assert.equal(resolvePath(null).id, 'curious');
+assert.equal(defaultPath, 'primer', 'the primer is the introduction');
+assert.equal(readerPaths[0].id, 'primer', 'the primer is offered first');
+assert.equal(resolvePath('invalid').id, 'primer');
+assert.equal(resolvePath(null).id, 'primer');
 assert.deepEqual(omittedChapters('curious'), ['electron', 'sectors']);
 assert.deepEqual(omittedChapters('physics'), ['question']);
 assert.deepEqual(omittedChapters('review'), ['question']);
@@ -117,6 +130,38 @@ assert.equal(chapterForAnchor('toString'), undefined);
 assert.equal(chapterForAnchor('unknown'), undefined);
 assert.equal(decodeAnchor('#%E0%A4%A'), '');
 assert.equal(decodeAnchor('#knot-explorer'), 'knot-explorer');
+
+// Every chapter after the letter can hand the reader to the other edition, and back.
+for (const chapter of chapterIds) {
+  const companions = companionChapters(chapter);
+  assert(
+    companions.length > 0 || chapter === 'primer-intro',
+    chapter + ' has a companion in the other edition',
+  );
+  for (const other of companions) {
+    assert.notEqual(editionOf(other), editionOf(chapter), chapter);
+    assert(
+      companionChapters(other).includes(chapter),
+      'companions are mutual: ' + chapter + ' and ' + other,
+    );
+  }
+}
+for (const chapter of primerChapters) {
+  assert.match(paperSectionsFor(chapter.number), /^§[IVX]/);
+  assert(primerPartIntroductions[chapter.part], 'part ' + chapter.part);
+}
+assert.equal(paperSectionsFor(4), '§II C–D, §III A–B, F');
+assert.equal(primerTotals.exhibits, primerExhibitSlots.length);
+assert.equal(
+  primerTotals.problems,
+  primerChapters
+    .flatMap((c) => c.sections.flatMap((s) => s.blocks))
+    .reduce((sum, b) => sum + (b.type === 'chew' ? b.items.length : 0), 0),
+);
+for (const id of primerChapterIds) {
+  const { minutes } = primerStats(id);
+  assert(minutes >= 3 && minutes <= 30, id + ' reads in ' + minutes + ' min');
+}
 for (let mask = 0; mask < 16; mask++) {
   const bits = [0, 1, 2, 3].map((i) => Boolean(mask & (1 << i)));
   assert.equal(motionAllowed(bits[0], bits[1], bits[2], bits[3]), mask === 12);
@@ -194,5 +239,5 @@ assert(
   'Optional WebMCP tools are registered',
 );
 console.log(
-  'PASS: five distinct reading routes over two editions; all 31 chapters retained; prerequisite order; every deep-link anchor rendered; invalid URLs; all 16 motion-policy states.',
+  'PASS: five distinct reading routes over two editions, the primer first; all 31 chapters retained; prerequisite order; mutual companions across editions; reading times; every deep-link anchor rendered; invalid URLs; all 16 motion-policy states.',
 );

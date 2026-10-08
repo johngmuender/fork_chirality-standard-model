@@ -8,7 +8,7 @@ it('server-renders the curious route with the paper’s chapters only', () => {
   const html = renderToString(<GumEssay initialPath="curious" />);
   expect(html).toContain('id="question"');
   expect(html).toContain('id="ledger"');
-  expect(html).toContain('Teach me from the primer');
+  expect(html).toContain('Teach me from the ground up');
   expect(html).not.toContain('id="primer-1"');
 });
 

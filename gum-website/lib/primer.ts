@@ -1,5 +1,9 @@
 import { primerContent } from './primer-content.ts';
-import type { PrimerChapter, PrimerSection } from './primer-types.ts';
+import type {
+  PrimerBlock,
+  PrimerChapter,
+  PrimerSection,
+} from './primer-types.ts';
 
 /** The GUM Material Primer, as the fifth reading path renders it. */
 export const primer = primerContent;
@@ -167,3 +171,164 @@ export const primerSectionNumbers = new Set(
     chapter.sections.map((s) => s.number ?? ''),
   ),
 );
+
+/**
+ * The primer's own map from its chapters to the paper's sections, parsed from
+ * its rules page so that every chapter can say where the paper picks it up.
+ */
+const paperMapText =
+  primer.front
+    .flatMap((section) => section.blocks)
+    .map((block) => (block.type === 'p' ? block.text : ''))
+    .find((text) => text.startsWith('**The map to the paper.**')) ?? '';
+const paperMap = new Map<number, string>();
+for (const match of paperMapText.matchAll(
+  /Chapters? (\d+)(?:–(\d+))? → (?:paper )?(.+?)\.(?= Chapter|$)/g,
+)) {
+  const first = Number(match[1]);
+  for (let n = first; n <= Number(match[2] ?? first); n++)
+    paperMap.set(n, match[3].replace(/'/g, '’'));
+}
+for (const chapter of primerChapters)
+  if (!paperMap.has(chapter.number))
+    throw new Error(
+      'The primer’s map to the paper omits Chapter ' + chapter.number,
+    );
+export function paperSectionsFor(chapter: number): string {
+  const sections = paperMap.get(chapter);
+  if (!sections) throw new RangeError('The primer has no chapter ' + chapter);
+  return sections;
+}
+
+const words = (text: string) => text.split(/\s+/).filter(Boolean).length;
+function blockWords(block: PrimerBlock): number {
+  switch (block.type) {
+    case 'p':
+    case 'quote':
+      return words(block.text);
+    case 'formula':
+      return words(block.text) + words(block.note);
+    case 'list':
+      return block.items.reduce((sum, item) => sum + words(item), 0);
+    case 'table':
+      return [block.header, ...block.rows]
+        .flat()
+        .reduce((sum, cell) => sum + words(cell), 0);
+    case 'tags':
+      return block.items.reduce(
+        (sum, tag) => sum + words(tag.name) + words(tag.text),
+        0,
+      );
+    case 'box':
+      return words(block.title) + words(block.text);
+    case 'chew':
+      return block.items.reduce((sum, problem) => sum + words(problem.text), 0);
+  }
+}
+const sectionWords = (sections: readonly PrimerSection[]) =>
+  sections.reduce(
+    (sum, section) =>
+      sum +
+      words(section.title) +
+      section.blocks.reduce((total, block) => total + blockWords(block), 0),
+    0,
+  );
+
+export type PrimerStats = {
+  words: number;
+  exhibits: number;
+  problems: number;
+  minutes: number;
+};
+/** A study pace for the primer's audience, and a pause at each exhibit to turn it by hand. */
+const WORDS_PER_MINUTE = 200;
+const MINUTES_PER_EXHIBIT = 1.5;
+function statsFor(
+  text: number,
+  exhibits: number,
+  problems: number,
+  extraMinutes = 0,
+): PrimerStats {
+  return {
+    words: text,
+    exhibits,
+    problems,
+    minutes: Math.max(
+      1,
+      Math.round(
+        text / WORDS_PER_MINUTE + exhibits * MINUTES_PER_EXHIBIT + extraMinutes,
+      ),
+    ),
+  };
+}
+const statsBySlug = new Map<string, PrimerStats>();
+// The front matter closes on the primer's 64-second film.
+statsBySlug.set(primerIntroId, statsFor(sectionWords(primer.front), 0, 0, 1));
+for (const chapter of primerChapters) {
+  const blocks = chapter.sections.flatMap((s) => s.blocks);
+  statsBySlug.set(
+    chapter.slug,
+    statsFor(
+      words(chapter.goals) + sectionWords(chapter.sections),
+      chapter.sections.reduce(
+        (sum, s) => sum + exhibitsFor(s.number ?? '').length,
+        0,
+      ),
+      blocks.reduce(
+        (sum, b) => sum + (b.type === 'chew' ? b.items.length : 0),
+        0,
+      ),
+    ),
+  );
+}
+statsBySlug.set(
+  primerEndId,
+  statsFor(
+    primer.glossary.reduce((sum, g) => sum + words(g.term) + words(g.text), 0) +
+      primer.answers.reduce((sum, a) => sum + words(a.text), 0) +
+      words(primer.project.intro) +
+      primer.project.items.reduce((sum, item) => sum + words(item.text), 0) +
+      words(primer.project.rubric),
+    0,
+    0,
+  ),
+);
+/** Words, exhibits, problems and an honest reading time for one part of the primer. */
+export function primerStats(slug: string): PrimerStats {
+  const stats = statsBySlug.get(slug);
+  if (!stats) throw new RangeError('The primer has no chapter ' + slug);
+  return stats;
+}
+export const primerTotals: PrimerStats = [...statsBySlug.values()].reduce(
+  (sum, s) => ({
+    words: sum.words + s.words,
+    exhibits: sum.exhibits + s.exhibits,
+    problems: sum.problems + s.problems,
+    minutes: sum.minutes + s.minutes,
+  }),
+  { words: 0, exhibits: 0, problems: 0, minutes: 0 },
+);
+
+/** The part a primer chapter belongs to, or null for the front and back matter. */
+export function partOfSlug(slug: string) {
+  const chapter = primerChapters.find((c) => c.slug === slug);
+  return chapter ? primerPart(chapter.part) : null;
+}
+
+/** A section heading of the primer by its anchor, front matter included. */
+export function primerSectionById(
+  id: string,
+): { number: string | null; title: string } | undefined {
+  for (const section of primer.front)
+    if (section.id === id)
+      return {
+        number: null,
+        title:
+          section.title.charAt(0) + section.title.slice(1).toLowerCase(),
+      };
+  for (const chapter of primerChapters)
+    for (const section of chapter.sections)
+      if (section.id === id)
+        return { number: section.number, title: section.title };
+  return undefined;
+}

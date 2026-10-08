@@ -56,7 +56,7 @@ for (const id of ['electron', 'sectors'])
     'Folded chapter mounted: ' + id,
   );
 assert.match(doc.body.textContent, /The background is still here/);
-assert.match(doc.body.textContent, /Teach me from the primer/);
+assert.match(doc.body.textContent, /Teach me from the ground up/);
 assert.equal(
   doc.querySelectorAll('.primer-choice').length,
   1,
