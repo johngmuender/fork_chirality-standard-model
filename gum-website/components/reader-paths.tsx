@@ -157,8 +157,13 @@ export function PathFlow({
       }
       element.tabIndex = -1;
       element.focus({ preventScroll: true });
+      // Glide to nearby anchors; jump to far ones, which would otherwise take
+      // seconds of chapters streaming past.
+      const near =
+        Math.abs(element.getBoundingClientRect().top) <
+        window.innerHeight * 1.5;
       element.scrollIntoView({
-        behavior: enabled ? 'smooth' : 'instant',
+        behavior: enabled && near ? 'smooth' : 'instant',
         block: 'start',
       });
       setDestination('');

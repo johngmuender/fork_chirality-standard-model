@@ -11,6 +11,7 @@ import {
   DepthControl,
   chapterKicker,
   formatMinutes,
+  inSentence,
   resumeTarget,
   sentenceCase,
   shortTitle,
@@ -121,7 +122,7 @@ export function WaysIn({
             <span className="choice-description">{p.description}</span>
             <span className="choice-stats">
               {p.chapters.length} chapters · begins with{' '}
-              {shortTitle(p.chapters[0])}
+              {inSentence(shortTitle(p.chapters[0]))}
             </span>
           </ToggleGroupItem>
         ))}
@@ -191,7 +192,7 @@ function PathOpening({
               <span>
                 {fromPrimer
                   ? 'Begin with the letter'
-                  : 'Begin with ' + shortTitle(first)}
+                  : 'Begin with ' + inSentence(shortTitle(first))}
               </span>
             )}
             <ArrowRight size={19} aria-hidden="true" />

@@ -115,6 +115,11 @@ export function shortTitle(chapter: ChapterId): string {
   return chapterInfo[chapter].short.replace(/^\d+ · /, '');
 }
 
+/** A title set inside a sentence: “Begin with the inverse Umdeutung”. */
+export function inSentence(title: string): string {
+  return title.replace(/^(The|A|An) /, (article) => article.toLowerCase());
+}
+
 /** The primer prints its part titles in capitals; the reader shows them in sentence case. */
 export function sentenceCase(text: string): string {
   return text.charAt(0) + text.slice(1).toLowerCase();

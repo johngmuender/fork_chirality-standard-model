@@ -89,9 +89,13 @@ export function PartOpener({ part }: { part: PrimerPart }) {
   );
 }
 
-/** Mark a chapter finished once its ending has stayed in view for a moment. */
+/**
+ * Mark a chapter finished once the rule at its end has stayed on screen for a
+ * moment. Only the rule is watched: a jump to the next chapter leaves it above
+ * the viewport, so arriving there does not finish the one before.
+ */
 function useFinishedWhenSeen(chapter: ChapterId) {
-  const ref = useRef<HTMLElement>(null);
+  const ref = useRef<HTMLParagraphElement>(null);
   const markRead = useJourney()?.markRead;
   useEffect(() => {
     const element = ref.current;
@@ -103,7 +107,7 @@ function useFinishedWhenSeen(chapter: ChapterId) {
         if (entry.isIntersecting)
           timer = window.setTimeout(() => markRead(chapter), 700);
       },
-      { threshold: 0.4 },
+      { threshold: 1, rootMargin: '0px 0px -15% 0px' },
     );
     observer.observe(element);
     return () => {
@@ -136,10 +140,9 @@ export function ChapterEnd({
   return (
     <aside
       className={'chapter-end' + (finished ? ' is-finished' : '')}
-      ref={ref}
       aria-label={'End of ' + kicker + ': ' + shortTitle(chapter)}
     >
-      <p className="chapter-end-mark">
+      <p className="chapter-end-mark" ref={ref}>
         <CheckCircle2 size={16} aria-hidden="true" />
         <span>
           {finished ? 'FINISHED' : 'END OF ' + kicker.toUpperCase()}
@@ -177,7 +180,7 @@ export function ChapterEnd({
                     <small>
                       {chapterMinutes(other)
                         ? formatMinutes(chapterMinutes(other)!)
-                        : 'opens here'}
+                        : 'opens in place'}
                     </small>
                   </a>
                 </li>
@@ -279,8 +282,9 @@ export function PathFinale({ path }: { path: ReaderPath }) {
         <strong>
           {finished} of {path.chapters.length}
         </strong>{' '}
-        {fromPrimer ? 'parts of the primer' : 'chapters of this route'} finished
-        in this browser.
+        {fromPrimer
+          ? 'finished in this browser: the sixteen chapters, the front matter and the back matter.'
+          : 'chapters of this route finished in this browser.'}
       </p>
       <ul className="path-finale-routes">
         {onward.map((p) => (
