@@ -3,107 +3,24 @@ import {
   Children,
   isValidElement,
   useEffect,
-  useRef,
   useState,
   type ReactNode,
 } from 'react';
-import { ArrowDown, ArrowRight, Plus, Minus } from 'lucide-react';
+import { Plus, Minus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { useMotion } from '@/components/exhibit-motion';
+import { navigateEvent } from '@/components/journey';
+import { ChapterEnd, PathFinale, ReturnToPlace } from '@/components/path-guide';
 import {
   chapterInfo,
   chapterForAnchor,
   decodeAnchor,
   foreignChapters,
   omittedChapters,
-  readerPaths,
   resolvePath,
   type ChapterId,
   type PathId,
 } from '@/lib/reader-paths';
-
-export function ReaderPaths({
-  selected,
-  depth,
-  onChoose,
-}: {
-  selected: PathId;
-  depth: string;
-  onChoose: (id: PathId) => void;
-}) {
-  const path = resolvePath(selected);
-  const depthLabel =
-    path.depthLabels?.[depth] ??
-    (depth === 'story'
-      ? 'EQUATIONS FOLDED AWAY'
-      : depth === 'math'
-        ? 'MATHEMATICAL DETAILS OPEN'
-        : 'INTERACTIVE EXPLANATIONS OPEN');
-  return (
-    <section
-      className="reader-paths"
-      id="reader-paths"
-      tabIndex={-1}
-      aria-labelledby="reader-path-heading"
-    >
-      <div className="reader-path-intro">
-        <div>
-          <span className="eyebrow">FIND YOUR WAY IN</span>
-          <h2 id="reader-path-heading">One material. Your starting point.</h2>
-        </div>
-        <p>
-          Choose what to open first. Four routes rearrange the paper’s edition
-          around the questions you bring; the fifth teaches the primer from the
-          ground up.
-        </p>
-      </div>
-      <ToggleGroup
-        className="reader-path-choices"
-        value={[selected]}
-        onValueChange={(values) => {
-          if (readerPaths.some((p) => p.id === values[0]))
-            onChoose(values[0] as PathId);
-        }}
-        aria-label="Choose a reader path"
-      >
-        {readerPaths.map((p) => (
-          <ToggleGroupItem
-            value={p.id}
-            key={p.id}
-            className={p.edition === 'primer' ? 'primer-choice' : ''}
-          >
-            <strong>{p.label}</strong>
-            <span>{p.description}</span>
-          </ToggleGroupItem>
-        ))}
-      </ToggleGroup>
-      <div className="path-opening" key={selected}>
-        <span className="eyebrow">
-          {path.chapters.length} CHAPTERS · {depthLabel}
-        </span>
-        <h3>{path.title}</h3>
-        <p>{path.introduction}</p>
-        <nav className="reader-path-stops" aria-label={path.label + ': route'}>
-          {path.stops.map((s, i) => (
-            <a key={s.id} href={'#' + s.id}>
-              <span>0{i + 1}</span>
-              {s.label}
-              <ArrowRight size={14} />
-            </a>
-          ))}
-          <a className="path-start" href={'#' + path.chapters[0]}>
-            Start here <ArrowDown size={15} />
-          </a>
-        </nav>
-      </div>
-      <output className="sr-only">
-        {path.label} selected. {path.chapters.length} chapters. The first
-        chapter is {chapterInfo[path.chapters[0]].title}.
-      </output>
-    </section>
-  );
-}
 
 export function PathChapter({
   children,
@@ -140,7 +57,10 @@ function OptionalChapter({
         </span>
         {expanded ? <Minus size={20} /> : <Plus size={20} />}
       </Button>
-      <div id={'optional-' + chapter}>{expanded ? children : null}</div>
+      <div id={'optional-' + chapter}>
+        {expanded ? children : null}
+        {expanded && <ReturnToPlace />}
+      </div>
     </div>
   );
 }
@@ -157,7 +77,6 @@ export function PathFlow({
   const [expanded, setExpanded] = useState<ChapterId[]>([]);
   const [listForeign, setListForeign] = useState(false);
   const [destination, setDestination] = useState('');
-  const host = useRef<HTMLDivElement>(null);
   const chapters = new Map(
     Children.toArray(children)
       .filter(isValidElement)
@@ -206,12 +125,24 @@ export function PathFlow({
     const hash = () => {
       if (location.hash) follow(decodeAnchor(location.hash));
     };
+    // Programmatic navigation also reaches landmarks outside the chapters,
+    // such as the path's opening.
+    const navigate = (event: Event) => {
+      const id = (event as CustomEvent<string>).detail;
+      if (!follow(id)) {
+        if (!document.getElementById(id)) return;
+        setDestination(id);
+      }
+      history.pushState(history.state, '', '#' + encodeURIComponent(id));
+    };
     document.addEventListener('click', click);
     window.addEventListener('hashchange', hash);
+    window.addEventListener(navigateEvent, navigate);
     hash();
     return () => {
       document.removeEventListener('click', click);
       window.removeEventListener('hashchange', hash);
+      window.removeEventListener(navigateEvent, navigate);
     };
   }, [path]);
   useEffect(() => {
@@ -226,8 +157,13 @@ export function PathFlow({
       }
       element.tabIndex = -1;
       element.focus({ preventScroll: true });
+      // Glide to nearby anchors; jump to far ones, which would otherwise take
+      // seconds of chapters streaming past.
+      const near =
+        Math.abs(element.getBoundingClientRect().top) <
+        window.innerHeight * 1.5;
       element.scrollIntoView({
-        behavior: enabled ? 'smooth' : 'instant',
+        behavior: enabled && near ? 'smooth' : 'instant',
         block: 'start',
       });
       setDestination('');
@@ -236,34 +172,14 @@ export function PathFlow({
   }, [destination, expanded, enabled]);
   const foreignOpen = foreign.filter((chapter) => expanded.includes(chapter));
   return (
-    <div className="path-flow" data-reader-path={selected} ref={host}>
-      {path.chapters.map((chapter, index) => (
+    <div className="path-flow" data-reader-path={selected}>
+      {path.chapters.map((chapter) => (
         <div className="path-chapter" data-chapter={chapter} key={chapter}>
-          {path.bridges[chapter] && (
-            <div className="path-bridge">
-              <span>
-                {String(index + 1).padStart(2, '0')} / {path.chapters.length}
-              </span>
-              <p>{path.bridges[chapter]}</p>
-            </div>
-          )}
           {chapters.get(chapter)}
-          <div className="path-next">
-            {index + 1 < path.chapters.length ? (
-              <a href={'#' + path.chapters[index + 1]}>
-                <span>NEXT</span>
-                {chapterInfo[path.chapters[index + 1]].title}
-                <ArrowDown size={16} />
-              </a>
-            ) : (
-              <a href="#reader-paths">
-                <span>GO FURTHER</span>Choose another route through the material{' '}
-                <ArrowRight size={16} />
-              </a>
-            )}
-          </div>
+          <ChapterEnd chapter={chapter} path={path} />
         </div>
       ))}
+      <PathFinale path={path} />
       {omitted.length > 0 && (
         <section className="path-further" aria-labelledby="further-heading">
           <span className="eyebrow">OPEN ANOTHER PART OF THE STORY</span>
@@ -302,7 +218,7 @@ export function PathFlow({
           <p>
             {path.edition === 'primer'
               ? 'Wherever the primer points at a theorem, a table or a stake, the paper’s chapter opens here without leaving this path.'
-              : 'Sixteen chapters for honors high-school and first-year readers, with tags, problems and corrections boxes. Open one here, or choose the primer route above.'}
+              : 'Sixteen chapters for honors high-school and first-year readers, with tags, problems and corrections boxes. Open one here, or take the primer as your path.'}
           </p>
           <Button
             variant="ghost"

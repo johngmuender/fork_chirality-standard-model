@@ -7,6 +7,7 @@ import './themes.css';
 import './reader-experience.css';
 import './foundations.css';
 import './gum.css';
+import './journey.css';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -26,9 +27,9 @@ const canonical = siteOrigin + (process.env.NEXT_PUBLIC_BASE_PATH ?? '') + '/';
 
 export const metadata: Metadata = {
   title:
-    'What Material Could Possess Quantum Mechanics as Its Coarse-Grained Bookkeeping? — An Interactive Edition',
+    'What Keeps the Books? The GUM Material Primer and the Draft It Teaches — An Interactive Edition',
   description:
-    'The GUM draft as an interactive edition: a material with positions and orientations, light as its locked wave, a knot as a particle, a tower of fields as the wave function, and thirty stakes with printed kills.',
+    'The GUM Material Primer as an interactive edition: sixteen chapters that teach the GUM program from the ground up, each ending where the working draft, “What Material Could Possess Quantum Mechanics as Its Coarse-Grained Bookkeeping?”, takes it further: a material with positions and orientations, light as its locked wave, a knot as a particle, a tower of fields as the wave function, and thirty stakes with printed kills.',
   metadataBase: new URL(canonical),
   alternates: { canonical },
 };

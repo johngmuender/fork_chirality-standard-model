@@ -240,11 +240,11 @@ export function editionOf(chapter: ChapterId): Edition {
 }
 
 export type PathId =
+  | 'primer'
   | 'curious'
   | 'physics'
   | 'experiments'
-  | 'review'
-  | 'primer';
+  | 'review';
 export type ReaderPath = {
   id: PathId;
   label: string;
@@ -258,7 +258,51 @@ export type ReaderPath = {
   bridges: Partial<Record<ChapterId, string>>;
   depthLabels?: Record<string, string>;
 };
+/** The primer comes first: it is the introduction, and the paper's four routes follow from it. */
 export const readerPaths: ReaderPath[] = [
+  {
+    id: 'primer',
+    label: 'Teach me from the ground up',
+    depth: 'explore',
+    edition: 'primer',
+    description:
+      'The GUM Material Primer: sixteen chapters for honors high-school and first-year readers, with its tags, problems, corrections boxes and exhibits. No calculus.',
+    title: 'What keeps the books? A first book on the GUM program.',
+    introduction:
+      'The primer teaches a theory that might be wrong, and means it. Sixteen chapters in eight parts, nearly verbatim, carry its tags, its TRY THIS experiments, its STEP-UP analogies, its WHAT CHANGED boxes and its problems, with an exhibit wherever a calculation can be turned by hand. The paper’s own instruments are one link away whenever the primer points at them.',
+    chapters: [
+      'primer-intro',
+      'primer-1',
+      'primer-2',
+      'primer-3',
+      'primer-4',
+      'primer-5',
+      'primer-6',
+      'primer-7',
+      'primer-8',
+      'primer-9',
+      'primer-10',
+      'primer-11',
+      'primer-12',
+      'primer-13',
+      'primer-14',
+      'primer-15',
+      'primer-16',
+      'primer-end',
+    ],
+    stops: [
+      { id: 'primer-1', label: 'The question' },
+      { id: 'primer-6', label: 'Light & charge' },
+      { id: 'primer-9', label: 'Matter itself' },
+      { id: 'primer-16', label: 'Adjudication' },
+    ],
+    bridges: {},
+    depthLabels: {
+      story: 'HIGH-SCHOOL TRACK · ★ SECTIONS AND PROBLEMS FOLDED',
+      explore: 'UNDERGRADUATE TRACK · ★ SECTIONS OPEN',
+      math: 'EVERYTHING OPEN · WITH ANSWER NOTES',
+    },
+  },
   {
     id: 'curious',
     label: 'I’m curious',
@@ -466,71 +510,63 @@ export const readerPaths: ReaderPath[] = [
         'Check the pitch window and the transparency bound against the oscillation floor and H₀.',
     },
   },
-  {
-    id: 'primer',
-    label: 'Teach me from the primer',
-    depth: 'explore',
-    edition: 'primer',
-    description:
-      'The GUM Material Primer: sixteen chapters for honors high-school and first-year readers, with its tags, problems, corrections boxes and exhibits.',
-    title: 'What keeps the books? A first book on the GUM program.',
-    introduction:
-      'The primer teaches a theory that might be wrong, and means it. Sixteen chapters in eight parts, nearly verbatim, carry its tags, its TRY THIS experiments, its STEP-UP analogies, its WHAT CHANGED boxes and its problems, with an exhibit wherever a calculation can be turned by hand. The paper’s own instruments are one link away whenever the primer points at them.',
-    chapters: [
-      'primer-intro',
-      'primer-1',
-      'primer-2',
-      'primer-3',
-      'primer-4',
-      'primer-5',
-      'primer-6',
-      'primer-7',
-      'primer-8',
-      'primer-9',
-      'primer-10',
-      'primer-11',
-      'primer-12',
-      'primer-13',
-      'primer-14',
-      'primer-15',
-      'primer-16',
-      'primer-end',
-    ],
-    stops: [
-      { id: 'primer-1', label: 'The question' },
-      { id: 'primer-6', label: 'Light & charge' },
-      { id: 'primer-9', label: 'Matter itself' },
-      { id: 'primer-16', label: 'Adjudication' },
-    ],
-    bridges: {
-      'primer-1':
-        'Part I — The question. Where the “made of” ladder stops, why the aether died twice, and the inversion GUM proposes.',
-      'primer-2':
-        'Part II — The material, level one. Springs and necklaces first; then grains that can turn, and the one relation that makes light exactly lightlike.',
-      'primer-4':
-        'Part III — Light, charge and the second speed. Maxwell from twist, the theorem that withdrew a prediction, and a paper cone that is a charge.',
-      'primer-7':
-        'Part IV — The quantum. A fluid with one strange pressure, a tower of fields, a count of knobs, and a cliff.',
-      'primer-9':
-        'Part V — Matter itself. Knots that cannot be combed away, a spinning closure that fixes ħ, and an electron with two scales.',
-      'primer-12':
-        'Part VI — Three families and the skeleton. Frustration classes, the lightest particle, and the Standard Model’s skeleton at its grades.',
-      'primer-14':
-        'Part VII — The cosmos and the one bit. A lag that looks like dark energy, geometry from defects, and one sign for the whole vacuum.',
-      'primer-16':
-        'Part VIII — Adjudication. The audit criterion, landings and tests, the death list ranked, and the kit packed for travel.',
-      'primer-end':
-        'The back matter: a selected glossary, spot-check answers, and the final project.',
-    },
-    depthLabels: {
-      story: 'HIGH-SCHOOL TRACK · ★ SECTIONS AND PROBLEMS FOLDED',
-      explore: 'UNDERGRADUATE TRACK · ★ SECTIONS OPEN',
-      math: 'EVERYTHING OPEN · WITH ANSWER NOTES',
-    },
-  },
 ];
+export const defaultPath: PathId = 'primer';
 export function resolvePath(id: string | null): ReaderPath {
-  return readerPaths.find((p) => p.id === id) ?? readerPaths[0];
+  return (
+    readerPaths.find((p) => p.id === id) ??
+    readerPaths.find((p) => p.id === defaultPath)!
+  );
+}
+export function isPathId(id: unknown): id is PathId {
+  return readerPaths.some((p) => p.id === id);
+}
+
+/** What each part of the primer sets out to do, shown where the part opens. */
+export const primerPartIntroductions: Record<number, string> = {
+  1: 'Where the “made of” ladder stops, why the aether died twice, and the inversion GUM proposes.',
+  2: 'Springs and necklaces first; then grains that can turn, and the one relation that makes light exactly lightlike.',
+  3: 'Maxwell from twist, the theorem that withdrew a prediction, and a paper cone that is a charge.',
+  4: 'A fluid with one strange pressure, a tower of fields, a count of knobs, and a cliff.',
+  5: 'Knots that cannot be combed away, a spinning closure that fixes ħ, and an electron with two scales.',
+  6: 'Frustration classes, the lightest particle, and the Standard Model’s skeleton at its grades.',
+  7: 'A lag that looks like dark energy, geometry from defects, and one sign for the whole vacuum.',
+  8: 'The audit criterion, landings and tests, the death list ranked, and the kit packed for travel.',
+};
+export const primerBackMatterIntroduction =
+  'A selected glossary, spot-check answers, and the final project: choose one claim, audit it with the full kit, write three pages.';
+
+/**
+ * Where the paper's edition picks up each primer chapter, following the
+ * primer's own map to the paper; read backwards, where the primer teaches
+ * the background of each of the paper's chapters.
+ */
+const paperChaptersOfPrimer: Partial<Record<ChapterId, ChapterId[]>> = {
+  'primer-1': ['question', 'core'],
+  'primer-2': ['material'],
+  'primer-3': ['material'],
+  'primer-4': ['light'],
+  'primer-5': ['light'],
+  'primer-6': ['vacuum', 'light'],
+  'primer-7': ['quantum'],
+  'primer-8': ['quantum'],
+  'primer-9': ['particle'],
+  'primer-10': ['particle'],
+  'primer-11': ['electron'],
+  'primer-12': ['sectors'],
+  'primer-13': ['sectors'],
+  'primer-14': ['cosmos'],
+  'primer-15': ['handedness'],
+  'primer-16': ['ledger', 'core'],
+  'primer-end': ['verify'],
+};
+/** The other edition's chapters that teach the same material as this one. */
+export function companionChapters(chapter: ChapterId): ChapterId[] {
+  if (editionOf(chapter) === 'primer')
+    return paperChaptersOfPrimer[chapter] ?? [];
+  return primerChapterIds.filter((id) =>
+    paperChaptersOfPrimer[id as ChapterId]?.includes(chapter),
+  ) as ChapterId[];
 }
 /** Chapters of the path’s own edition that it leaves out: the background folds. */
 export function omittedChapters(id: PathId): ChapterId[] {

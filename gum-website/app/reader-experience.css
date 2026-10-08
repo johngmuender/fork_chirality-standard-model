@@ -6,91 +6,31 @@
   color: var(--muted-foreground);
   margin: 35px 0;
 }
-.reader-paths {
-  scroll-margin-top: 85px;
-}
-.path-opening {
-  max-width: 920px;
-  padding-top: 32px;
-  animation: exhibit-in 0.6s ease both;
-}
-.path-opening h3 {
-  font:
-    34px/1.18 Georgia,
-    serif;
-  margin: 15px 0;
-  color: var(--foreground);
-  max-width: 760px;
-}
-.path-opening > p {
-  max-width: 750px;
-  font-size: 17px;
-  line-height: 1.8;
-  color: var(--muted-foreground);
-}
-.reader-path-stops {
-  flex-wrap: wrap;
-}
-.reader-path-stops a {
-  font-size: 14px;
-}
 .path-flow {
   counter-reset: reader-chapter;
 }
 .path-chapter {
   counter-increment: reader-chapter;
 }
-.path-chapter .section-number > span:first-child {
+/* A paper route numbers its chapters in reading order; the primer keeps its own numbers. */
+.path-flow:not([data-reader-path='primer'])
+  .path-chapter
+  .section-number
+  > span:first-child {
   font-size: 0;
 }
-.path-chapter .section-number > span:first-child::before {
+.path-flow:not([data-reader-path='primer'])
+  .path-chapter
+  .section-number
+  > span:first-child::before {
   content: counter(reader-chapter, decimal-leading-zero);
   font-size: 12px;
 }
-.path-bridge {
-  max-width: 1180px;
-  margin: 0 auto;
-  padding: 38px 6% 0;
-  display: flex;
-  gap: 25px;
-  align-items: baseline;
-}
-.path-bridge > span {
-  white-space: nowrap;
-  font:
-    12px var(--font-geist-mono),
-    monospace;
-  color: var(--primary);
-}
-.path-bridge p {
-  margin: 0;
-  max-width: 810px;
-  font:
-    20px/1.65 Georgia,
-    serif;
-  color: var(--muted-foreground);
-}
-.path-next {
-  margin: 0 auto;
-  padding: 0 6% 45px;
-  max-width: 1240px;
-}
-.path-next a {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  border-top: 1px solid var(--border);
-  padding: 20px 0;
-  width: fit-content;
-  font-size: 15px;
-  color: var(--foreground);
-}
-.path-next span {
-  font:
-    12px var(--font-geist-mono),
-    monospace;
-  color: var(--primary);
-  letter-spacing: 0.06em;
+.path-flow[data-reader-path='primer']
+  .path-chapter
+  .section-number
+  > span:first-child {
+  display: none;
 }
 .path-further {
   padding: 70px 6%;
@@ -138,16 +78,6 @@
 .optional-chapter .section {
   padding-left: 0;
   padding-right: 0;
-}
-.chapter-nav {
-  overflow-x: auto;
-  justify-content: flex-start;
-  scrollbar-width: thin;
-}
-.chapter-nav > a {
-  flex-shrink: 0;
-  max-width: none;
-  font-size: 14px;
 }
 .geometry-depth {
   margin: 30px 0;
@@ -473,31 +403,11 @@
   .motion-control span {
     display: none;
   }
-  .path-opening h3 {
-    font-size: 30px;
-  }
   .three-canvas {
     height: 420px;
   }
 }
 @media (max-width: 700px) {
-  .path-opening h3 {
-    font-size: 27px;
-  }
-  .path-bridge {
-    padding-top: 25px;
-    gap: 15px;
-  }
-  .path-bridge p {
-    font-size: 18px;
-  }
-  .path-next {
-    padding-bottom: 24px;
-  }
-  .path-next a {
-    font-size: 14px;
-    flex-wrap: wrap;
-  }
   .path-further {
     padding: 45px 6%;
   }

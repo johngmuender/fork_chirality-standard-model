@@ -36,6 +36,8 @@ import { electronMassEv, muonMassEv, tauMassEv } from '@/lib/gum-constants';
 const KnotExplorer = lazy(() => import('@/components/knot-explorer'));
 
 const mev = (ev: number, digits = 2) => (ev / 1e6).toFixed(digits) + ' MeV';
+/** Server and browser can disagree in the last bit of exp and atan2; drawn coordinates must not. */
+const round = (value: number) => Math.round(value * 1000) / 1000;
 
 /** A flat cross-section of the hedgehog: the x–z plane, arrows for π = sin f x̂, shade for σ_P. */
 export function KnotSection({
@@ -76,12 +78,13 @@ export function KnotSection({
       {cells.flat().map(([x, z], i) => {
         const field = hedgehog(x, 0, z, radius);
         const r = Math.hypot(x, z);
-        const length =
+        const length = round(
           r < radius
             ? 26 * Math.hypot(field.pi[0], field.pi[2])
-            : 12 * Math.exp(-(r - radius) / halo) * (radius / r);
+            : 12 * Math.exp(-(r - radius) / halo) * (radius / r),
+        );
         if (length < 0.4) return null;
-        const angle = (Math.atan2(z, x) * 180) / Math.PI;
+        const angle = round((Math.atan2(z, x) * 180) / Math.PI);
         const tint =
           r < radius ? (field.sigma < 0 ? '#8bbcff' : '#9acbb9') : '#f1a17d';
         return (
