@@ -702,7 +702,7 @@ export const plates: Plate[] = [
     title: 'Théorie des corps déformables',
     text: 'A continuum whose points carry an orientation as well as a position. Its stress need not be symmetric; couple stresses balance the angular momentum. GUM’s continuum description has this form.',
     source: 'Hermann, Paris',
-    url: 'https://en.wikipedia.org/wiki/Cosserat_elasticity',
+    url: 'https://archive.org/details/thoriedescorpsdf0000euge',
     art: <OrientedPoints />,
   },
   {

@@ -113,7 +113,7 @@ const timeline = [
     title: 'Points that carry an orientation',
     text: 'Eugène and François Cosserat wrote the mechanics of continua whose points carry a triad as well as a position. Their stress need not be symmetric, and couple stresses balance the angular momentum. GUM’s first description of its material is a chiral continuum of this kind.',
     link: 'Cosserat & Cosserat, Théorie des corps déformables',
-    url: 'https://en.wikipedia.org/wiki/Cosserat_elasticity',
+    url: 'https://archive.org/details/thoriedescorpsdf0000euge',
   },
   {
     year: '1925',
@@ -850,9 +850,7 @@ function EssayContent({ initialPath }: { initialPath: PathId }) {
                 <a href={asset('source-manifest.json')}>
                   Download manifest <Download size={14} />
                 </a>
-                <a
-                  href={repository + '/archive/refs/heads/' + snapshot + '.zip'}
-                >
+                <a href={repository + '/archive/' + snapshot + '.zip'}>
                   Branch ZIP <Download size={14} />
                 </a>
               </div>
