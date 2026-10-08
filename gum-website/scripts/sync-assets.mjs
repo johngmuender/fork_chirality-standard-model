@@ -15,7 +15,7 @@ const files = {
 };
 const check = process.argv.includes('--check');
 const manifest = {
-  repository: 'https://github.com/johngmuender/fork_chirality-standard-model',
+  repository: 'https://github.com/johngmuender/gumai-website-intro-v5-1',
   scope:
     'SHA-256 of the downloadable files copied from this checkout. Content identity, not a publisher signature.',
   files: Object.entries(files).map(([download, source]) => {
