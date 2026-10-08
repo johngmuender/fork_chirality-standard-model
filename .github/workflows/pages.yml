@@ -2,6 +2,7 @@ name: GitHub Pages
 
 # Checks every pull request. Pushes to main also publish the edition to the
 # repository's project page, once Settings > Pages > Source is GitHub Actions.
+# push test 1
 on:
   push:
     branches: [main]
