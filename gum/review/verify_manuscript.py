@@ -165,8 +165,9 @@ for M in (10, 100, 1000):
     n10 = n_at_fidelity(0.1, N, M, math.pi / 2)
     txt.append(f"M={M}: n(F=0.9) = {n90:.1f}, n(F=0.1) = {n10:.1f}, width {n10-n90:.2f}")
 asym = math.log2(math.log(math.pi / 2 / math.acos(math.sqrt(0.9))) / math.log(math.pi / 2 / math.acos(math.sqrt(0.1))))
+exact = math.log2(math.log(0.1) / math.log(0.9))
 row("4.4", "Prop. 16: the 90%→10% cliff spans Δn_cliff ≈ log2 ln(3GD/c0) ≈ 6 qubits",
-    "; ".join(txt) + f"; asymptotic width log2[ln(c0/δ90)/ln(c0/δ10)] = {asym:.2f} qubits at c0 = π/2. The paper's 6 is the span from n0+1 to the 10% point, not the 90→10 width", "X")
+    "; ".join(txt) + f"; asymptotic width log2[ln(c0/δ90)/ln(c0/δ10)] = {asym:.2f} qubits at c0 = π/2; with the exact CP^N ball volume (covering number ≥ sin^−2N δ, no c0) the width is log2[ln0.1/ln0.9] = {exact:.2f} qubits. The paper's 6 is the span from n0+1 to the 10% point, not the 90→10 width", "X")
 # with c0 = 1 the F=0.1 point is never reached (δ_min ≤ c0 < 1.249)
 row("4.5", "Prop. 16 as printed needs c0 ≥ 1.249 rad for F_max to fall below 0.1",
     f"δ(F=0.1) = {math.acos(math.sqrt(0.1)):.3f} rad; with c0 = O(1) < 1.249 the formula floors at F = cos²c0", "!")
