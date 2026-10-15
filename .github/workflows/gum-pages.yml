@@ -1,0 +1,52 @@
+name: Publish GUM interactive edition
+
+# Run by hand. The default Pages workflow (pages.yml) publishes the chirality
+# website on every push to main; this one publishes the GUM edition instead,
+# so a repository chooses which site its project page serves.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      PAGES_BASE_PATH: /${{ github.event.repository.name }}
+      SITE_ORIGIN: https://${{ github.repository_owner }}.github.io
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: gum-website/package-lock.json
+      - run: npm ci
+        working-directory: gum-website
+      - run: npm run sync:assets && npm run check
+        working-directory: gum-website
+      - run: npm run build:pages
+        working-directory: gum-website
+      - run: node scripts/check-pages.mjs
+        working-directory: gum-website
+      - uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3
+        with:
+          path: gum-website/dist/client/${{ github.event.repository.name }}
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4
