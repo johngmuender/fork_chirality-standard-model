@@ -7,3 +7,7 @@ This folder holds an independent verification and critical assessment of `gum/ma
 - `verification-report.md` — the script's output, one row per check, with a status code.
 
 The repository's later revision of the same draft, `gum/paper/gum-paper.md` (2026-09-28), already withdraws or re-grades some of the items reviewed here; the assessment says which, so the two documents can be reconciled.
+
+## Revision 3 audit
+
+`gum/review/r3/` holds the audit of revision 3 (2026-10-17) of the manuscript and of the r3 primer: `verify_r3.py` and its report, and two files written for the agent that drafted r3 — the verification and correction notes and a brainstorm of new experiments. See `gum/review/r3/README.md`.
